@@ -34,7 +34,7 @@ Dark Wing is a research framework for cointegration-based statistical arbitrage 
 
 ---
 
-## At-a-Glance Results
+## At a Glance Results
 
 ```bash
 =================================================================
@@ -586,7 +586,7 @@ Full mathematical derivations and econometric assumptions are documented in the 
 - **Z-score thresholds**: `Entry = ±1.50σ, Exit = ±0.40σ, Structural Stop = ±3.00σ`
 - **Stop barriers**: Z-score hard stop`(±3.0σ)` + Dollar drawdown cap (3% of total capital) + Spread volatility expansion `(2.5σ)` + Ornstein-Uhlenbeck time decay stop `(3 × Half-Life)` + 5-bar post-stop cooldown
 
-Full results table: see [**At-a-Glance**](README%203d793de17f3d809c8843e1bbd90d6443.md) result
+Full results table: see [**At-a-Glance Results**](#at-a-glance-results) result
 
 ---
 
