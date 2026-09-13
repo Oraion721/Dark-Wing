@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>VECM Model Fitting — Code Flowchart | Dark Wing</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#f8fafc;color:#0f172a;font-family:'Inter',sans-serif;min-height:100vh;padding:30px 20px 60px}
+.header{text-align:center;margin-bottom:32px}
+.header h1{font-size:1.9rem;font-weight:700;color:#1e293b;margin-bottom:8px}
+.header p{color:#475569;font-size:.9rem}
+.header .sub{font-family:'JetBrains Mono',monospace;font-size:.78rem;color:#64748b;margin-top:5px}
+.legend{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;margin-bottom:36px;padding:14px 22px;background:#ffffff;border:1px solid #e2e8f0;border-radius:12px;max-width:960px;margin-left:auto;margin-right:auto;box-shadow:0 4px 6px -1px rgba(0,0,0,0.05)}
+.legend-item{display:flex;align-items:center;gap:7px;font-size:.76rem;color:#475569;font-weight:500}
+.chart-wrapper{display:flex;justify-content:center;overflow-x:auto}
+svg.fc{font-family:'Inter',sans-serif}
+.lbl-math{fill:#334155;font-size:10.5px;font-family:'JetBrains Mono',monospace}
+.footer{text-align:center;margin-top:28px;color:#64748b;font-size:.78rem;font-family:'JetBrains Mono',monospace}
+</style>
+</head>
+<body>
+<div class="header">
+  <h1>VECMModel — fit_vecm.py &mdash; Code Flowchart</h1>
+  <p>Complete execution flow of <strong>fit_vecm.py</strong> &mdash; Dark Wing/Financial Mathematics</p>
+  <div class="sub">Financial_Mathematics/VECM/fit_vecm.py</div>
+</div>
+
+<div class="legend">
+  <div class="legend-item"><svg width="64" height="24"><polygon points="6,2 54,2 50,22 2,22" fill="#eff6ff" stroke="#2563eb" stroke-width="2"/><text x="30" y="15" text-anchor="middle" fill="#1e40af" font-size="8" font-family="Inter">I/O</text></svg><span>Parallelogram (Input/Output)</span></div>
+  <div class="legend-item"><svg width="50" height="22"><ellipse cx="25" cy="11" rx="23" ry="10" fill="#f0fdf4" stroke="#16a34a" stroke-width="2"/><text x="25" y="14.5" text-anchor="middle" fill="#166534" font-size="9" font-family="Inter">Oval</text></svg><span>Terminal (Start/End)</span></div>
+  <div class="legend-item"><svg width="52" height="22"><rect x="4" y="3" width="44" height="16" rx="4" fill="#ffffff" stroke="#64748b" stroke-width="2"/><text x="26" y="14.5" text-anchor="middle" fill="#334155" font-size="9" font-family="Inter">Rect</text></svg><span>Rectangle (Process)</span></div>
+  <div class="legend-item"><svg width="52" height="24"><polygon points="26,1 50,12 26,23 2,12" fill="#faf5ff" stroke="#9333ea" stroke-width="2"/><text x="26" y="15.5" text-anchor="middle" fill="#6b21a8" font-size="9" font-family="Inter">Diam</text></svg><span>Diamond (Decision)</span></div>
+  <div class="legend-item"><svg width="24" height="24"><circle cx="12" cy="12" r="10" fill="#f0fdf4" stroke="#22c55e" stroke-width="2"/><text x="12" y="15.5" text-anchor="middle" fill="#15803d" font-size="9" font-family="Inter" font-weight="600">A</text></svg><span>Circle (Connector)</span></div>
+  <div class="legend-item"><svg width="52" height="22"><rect x="4" y="3" width="44" height="16" rx="4" fill="#f0fdfa" stroke="#0d9488" stroke-width="2"/><text x="26" y="14.5" text-anchor="middle" fill="#0f766e" font-size="9" font-family="Inter">Sub</text></svg><span>Sub-process Call</span></div>
+  <div class="legend-item"><svg width="52" height="22"><rect x="4" y="3" width="44" height="16" rx="4" fill="#fef2f2" stroke="#dc2626" stroke-width="2"/><text x="26" y="14.5" text-anchor="middle" fill="#991b1b" font-size="9" font-family="Inter">Err</text></svg><span>Exception/Error</span></div>
+  <div class="legend-item"><svg width="64" height="24"><polygon points="6,2 54,2 50,22 2,22" fill="#fffbeb" stroke="#d97706" stroke-width="2"/><text x="30" y="15" text-anchor="middle" fill="#92400e" font-size="8" font-family="Inter">Out</text></svg><span>Return/Output</span></div>
+</div>
+
+<div class="chart-wrapper">
+<svg class="fc" width="1060" height="4200" viewBox="0 0 1060 4200">
+<defs>
+<marker id="ah" markerWidth="9" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0,9 3.5,0 7" fill="#475569"/></marker>
+<marker id="ahg" markerWidth="9" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0,9 3.5,0 7" fill="#16a34a"/></marker>
+<marker id="ahr" markerWidth="9" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0,9 3.5,0 7" fill="#dc2626"/></marker>
+</defs>
+
+<!-- ===== SECTION 1: __init__ ===== -->
+<ellipse cx="530" cy="60" rx="140" ry="22" fill="#f0fdf4" stroke="#16a34a" stroke-width="2"/>
+<text x="530" y="65" text-anchor="middle" fill="#166534" font-size="13" font-weight="600">START: VECMModel( )</text>
+
+<line x1="530" y1="82" x2="530" y2="98" stroke="#475569" stroke-width="1.6" marker-end="url(#ah)"/>
+
+<!-- INPUT -->
+<polygon points="390,98 700,98 670,138 360,138" fill="#eff6ff" stroke="#2563eb" stroke-width="1.8"/>
+<text x="530" y="116" text-anchor="middle" fill="#1e40af" font-size="11">INPUT: data, k_ar_diff, coint_rank,</text>
+<text x="530" y="130" text-anchor="middle" fill="#1e40af" font-size="10.5">det_order, verify_i1, johansen_beta</text>
+
+<line x1="530" y1="138" x2="530" y2="154" stroke="#475569" stroke-width="1.6" marker-end="url(#ah)"/>
+
+<!-- Validation -->
+<rect x="330" y="154" width="400" height="64" rx="6" fill="#ffffff" stroke="#64748b" stroke-width="1.8"/>
+<text x="530" y="174" text-anchor="middle" fill="#334155" font-size="12" font-weight="600">Input Validation Block</text>
+<text x="530" y="190" text-anchor="middle" fill="#475569" font-size="10.5">isinstance(data, DataFrame)? cols >= 2?</text>
+<text x="530" y="204" text-anchor="middle" fill="#475569" font-size="10.5">k_ar_diff >= 1? 0 &lt; coint_rank &lt; m? det_order valid?</text>
+
+<line x1="530" y1="218" x2="530" y2="240" stroke="#475569" stroke-width="1.6" marker-end="url(#ah)"/>
+
+<!-- DEC: pass? -->
+<polygon points="530,240 680,272 530,304 380,272" fill="#faf5ff" stroke="#9333ea" stroke-width="2"/>
+<text x="530" y="269" text-anchor="middle" fill="#6b21a8" font-size="11.5">All validations</text>
+<text x="530" y="285" text-anchor="middle" fill="#6b21a8" font-size="11.5">pass?</text>
+
+<line x1="680" y1="272" x2="800" y2="272" stroke="#dc2626" stroke-width="1.6" marker-end="url(#ahr)"/>
+<text x="740" y="265" text-anchor="middle" fill="#dc2626" font-size="10" font-weight="600">No</text>
+<rect x="800" y="254" width="210" height="36" rx="6" fill="#fef2f2" stroke="#dc2626" stroke-width="1.8"/>
+<text x="905" y="271" text-anchor="middle" fill="#991b1b" font-size="11" font-weight="600">raise TypeError</text>
+<text x="905" y="285" text-anchor="middle" fill="#991b1b" font-size="10">or ValueError</text>
+
+<line x1="530" y1="304" x2="530" y2="328" stroke="#16a34a" stroke-width="1.6" marker-end="url(#ahg)"/>
+<text x="542" y="320" text-anchor="middle" fill="#16a34a" font-size="10" font-weight="600">Yes</text>
+
+<!-- Store data -->
+<rect x="320" y="328" width="420" height="72" rx="6" fill="#ffffff" stroke="#64748b" stroke-width="1.8"/>
+<text x="530" y="348" text-anchor="middle" fill="#334155" font-size="12" font-weight="600">Store Core Attributes</text>
+<text x="530" y="364" text-anchor="middle" fill="#475569" font-size="10.5">self.data = data.copy().dropna()  |  self.T, self.m, self.cols</text>
+<text x="530" y="378" text-anchor="middle" fill="#475569" font-size="10.5">self.k_ar_diff, self.coint_rank, self.det_order</text>
+<text x="530" y="392" text-anchor="middle" fill="#475569" font-size="10.5">self._det_str = _DET_ORDER_MAP_VECM[det_order]</text>
+
+<line x1="530" y1="400" x2="530" y2="420" stroke="#475569" stroke-width="1.6" marker-end="url(#ah)"/>
+
+<!-- Init placeholders -->
+<rect x="310" y="420" width="440" height="56" rx="6" fill="#ffffff" stroke="#64748b" stroke-width="1.8"/>
+<text x="530" y="440" text-anchor="middle" fill="#334155" font-size="12" font-weight="600">Initialize Result Placeholders = None</text>
+<text x="530" y="456" text-anchor="middle" fill="#475569" font-size="10.5">self.alpha, beta, gamma, sigma_u, ect, resid</text>
+<text x="530" y="470" text-anchor="middle" fill="#475569" font-size="10.5">self.fittedvalues, _vecm_result, _is_stable, _recon_angle</text>
+
+<line x1="530" y1="476" x2="530" y2="508" stroke="#475569" stroke-width="1.6" marker-end="url(#ah)"/>
+
+<!-- Connector A -->
+<circle cx="530" cy="524" r="16" fill="#f0fdf4" stroke="#22c55e" stroke-width="2"/>
+<text x="530" y="528" text-anchor="middle" fill="#15803d" font-size="11" font-weight="600">A</text>
+
+<!-- ===== SECTION 2: from_johansen ===== -->
+<line x1="530" y1="540" x2="530" y2="580" stroke="#475569" stroke-width="1.6" marker-end="url(#ah)"/>
+
+<rect x="300" y="580" width="460" height="76" rx="6" fill="#f0fdfa" stroke="#0d9488" stroke-width="1.8"/>
+<text x="530" y="600" text-anchor="middle" fill="#0f766e" font-size="12" font-weight="600">@classmethod  from_johansen(johansen_test, verify_i1)</text>
+<text x="530" y="616" text-anchor="middle" fill="#0f766e" font-size="10.5">① Check: johansen_test._raw_result is not None</text>
+<text x="530" y="630" text-anchor="middle" fill="#0f766e" font-size="10.5">② Check: johansen_test.rank &gt; 0   (else raise ValueError)</text>
+<text x="530" y="644" text-anchor="middle" fill="#0f766e" font-size="10.5">③ return cls(data, k_ar_diff, coint_rank, det_order, johansen_beta)</text>
+
+<line x1="530" y1="656" x2="530" y2="688" stroke="#475569" stroke-width="1.6" marker-end="url(#ah)"/>
+
+<!-- Connector B -->
+<circle cx="530" cy="704" r="16" fill="#f0fdf4" stroke="#22c55e" stroke-width="2"/>
+<text x="530" y="708" text-anchor="middle" fill="#15803d" font-size="11" font-weight="600">B</text>
+
+<!-- ===== SECTION 3: fit() ===== -->
+<line x1="530" y1="720" x2="530" y2="762" stroke="#475569" stroke-width="1.6" marker-end="url(#ah)"/>
+<text x="600" y="740" fill="#1e293b" font-size="10" font-weight="600">SECTION: fit()</text>
+
+<!-- DEC: verify_i1 -->
+<polygon points="530,762 680,792 530,822 380,792" fill="#faf5ff" stroke="#9333ea" stroke-width="2"/>
+<text x="530" y="789" text-anchor="middle" fill="#6b21a8" font-size="11.5">verify_i1</text>
+<text x="530" y="805" text-anchor="middle" fill="#6b21a8" font-size="11.5">== True?</text>
+
+<line x1="380" y1="792" x2="220" y2="792" stroke="#16a34a" stroke-width="1.6" marker-end="url(#ahg)"/>
+<text x="300" y="786" text-anchor="middle" fill="#16a34a" font-size="10" font-weight="600">Yes</text>
+<rect x="60" y="768" width="160" height="52" rx="6" fill="#f0fdfa" stroke="#0d9488" stroke-width="1.8"/>
+<text x="140" y="788" text-anchor="middle" fill="#0f766e" font-size="11" font-weight="600">_verify_integration</text>
+<text x="140" y="802" text-anchor="middle" fill="#0f766e" font-size="10.5">_order()</text>
+<text x="140" y="816" text-anchor="middle" fill="#0f766e" font-size="10">StationarityTest per col</text>
+<path d="M 140 820 L 140 870 L 530 870" stroke="#475569" stroke-width="1.6" fill="none"/>
+
+<line x1="680" y1="792" x2="800" y2="792" stroke="#dc2626" stroke-width="1.6" marker-end="url(#ahr)"/>
+<text x="740" y="786" text-anchor="middle" fill="#dc2626" font-size="10" font-weight="600">No</text>
+<path d="M 800 792 L 860 792 L 860 870 L 530 870" stroke="#475569" stroke-width="1.6" fill="none"/>
+
+<line x1="530" y1="870" x2="530" y2="900" stroke="#475569" stroke-width="1.6" marker-end="url(#ah)"/>
+
+<!-- VECM build -->
+<rect x="290" y="900" width="480" height="64" rx="6" fill="#f0fdfa" stroke="#0d9488" stroke-width="1.8"/>
+<text x="530" y="920" text-anchor="middle" fill="#0f766e" font-size="12" font-weight="600">Build statsmodels VECM</text>
+<text x="530" y="936" text-anchor="middle" fill="#0f766e" font-size="10.5">VECM(endog=self.data, k_ar_diff=self.k_ar_diff,</text>
+<text x="530" y="950" text-anchor="middle" fill="#0f766e" font-size="10.5">coint_rank=self.coint_rank, deterministic=self._det_str)</text>
+
+<line x1="530" y1="964" x2="530" y2="992" stroke="#475569" stroke-width="1.6" marker-end="url(#ah)"/>
+
+<!-- model.fit() -->
+<rect x="310" y="992" width="440" height="48" rx="6" fill="#f0fdfa" stroke="#0d9488" stroke-width="1.8"/>
+<text x="530" y="1014" text-anchor="middle" fill="#0f766e" font-size="12" font-weight="600">vecm_res = model.fit(method='ml')</text>
+<text x="530" y="1030" text-anchor="middle" fill="#0f766e" font-size="10.5">Johansen MLE — same eigenvalue problem as the test</text>
+
+<line x1="530" y1="1040" x2="530" y2="1066" stroke="#475569" stroke-width="1.6" marker-end="url(#ah)"/>
+
+<!-- DEC exception -->
+<polygon points="530,1066 680,1096 530,1126 380,1096" fill="#faf5ff" stroke="#9333ea" stroke-width="2"/>
+<text x="530" y="1093" text-anchor="middle" fill="#6b21a8" font-size="11.5">Exception</text>
+<text x="530" y="1109" text-anchor="middle" fill="#6b21a8" font-size="11.5">raised?</text>
+
+<line x1="680" y1="1096" x2="800" y2="1096" stroke="#dc2626" stroke-width="1.6" marker-end="url(#ahr)"/>
+<text x="740" y="1090" text-anchor="middle" fill="#dc2626" font-size="10" font-weight="600">Yes</text>
+<rect x="800" y="1078" width="222" height="36" rx="6" fill="#fef2f2" stroke="#dc2626" stroke-width="1.8"/>
+<text x="911" y="1096" text-anchor="middle" fill="#991b1b" font-size="11" font-weight="600">raise RuntimeError</text>
+<text x="911" y="1110" text-anchor="middle" fill="#991b1b" font-size="10">"VECM.fit() failed: {e}"</text>
+
+<line x1="530" y1="1126" x2="530" y2="1152" stroke="#16a34a" stroke-width="1.6" marker-end="url(#ahg)"/>
+<text x="542" y="1142" text-anchor="middle" fill="#16a34a" font-size="10" font-weight="600">No</text>
+
+<!-- Extract params -->
+<rect x="290" y="1152" width="480" height="88" rx="6" fill="#ffffff" stroke="#64748b" stroke-width="1.8"/>
+<text x="530" y="1172" text-anchor="middle" fill="#334155" font-size="12" font-weight="600">Extract Parameters from vecm_res</text>
+<text x="530" y="1188" text-anchor="middle" fill="#475569" font-size="10.5">self.alpha    = vecm_res.alpha          (m × r*)</text>
+<text x="530" y="1202" text-anchor="middle" fill="#475569" font-size="10.5">self.beta     = vecm_res.beta           (m × r*)</text>
+<text x="530" y="1216" text-anchor="middle" fill="#475569" font-size="10.5">self.sigma_u  = vecm_res.sigma_u        (m × m)</text>
+<text x="530" y="1230" text-anchor="middle" fill="#475569" font-size="10.5">self.resid, self.fittedvalues = vecm_res.resid / .fittedvalues</text>
+
+<line x1="530" y1="1240" x2="530" y2="1266" stroke="#475569" stroke-width="1.6" marker-end="url(#ah)"/>
+
+<!-- gamma split -->
+<rect x="310" y="1266" width="440" height="48" rx="6" fill="#ffffff" stroke="#64748b" stroke-width="1.8"/>
+<text x="530" y="1284" text-anchor="middle" fill="#334155" font-size="12" font-weight="600">_extract_gamma( vecm_res.gamma )</text>
+<text x="530" y="1300" text-anchor="middle" fill="#475569" font-size="10.5">Split (m × m·k) matrix → list of k blocks (m × m)   → self.gamma</text>
+
+<line x1="530" y1="1314" x2="530" y2="1340" stroke="#475569" stroke-width="1.6" marker-end="url(#ah)"/>
+
+<!-- ECT computation -->
+<rect x="300" y="1340" width="460" height="56" rx="6" fill="#ffffff" stroke="#64748b" stroke-width="1.8"/>
+<text x="530" y="1360" text-anchor="middle" fill="#334155" font-size="12" font-weight="600">Compute ECT = data @ beta</text>
+<text x="530" y="1376" text-anchor="middle" fill="#475569" font-size="10.5">ect_values = self.data.values @ self.beta     (T × r*)</text>
+<text x="530" y="1390" text-anchor="middle" fill="#475569" font-size="10.5">self.ect = pd.DataFrame(ect_values, index=data.index, cols=[ECT_1..ECT_r*])</text>
+
+<line x1="530" y1="1396" x2="530" y2="1422" stroke="#475569" stroke-width="1.6" marker-end="url(#ah)"/>
+
+<!-- Reconcile beta -->
+<rect x="310" y="1422" width="440" height="56" rx="6" fill="#f0fdfa" stroke="#0d9488" stroke-width="1.8"/>
+<text x="530" y="1442" text-anchor="middle" fill="#0f766e" font-size="12" font-weight="600">_reconcile_beta( )   [if johansen_beta provided]</text>
+<text x="530" y="1458" text-anchor="middle" fill="#0f766e" font-size="10.5">Compute max canonical angle between VECM β and Johansen β</text>
+<text x="530" y="1472" text-anchor="middle" fill="#0f766e" font-size="10.5">Warn if angle &gt; 15°  →  self._recon_angle = angle</text>
+
+<line x1="530" y1="1478" x2="530" y2="1504" stroke="#475569" stroke-width="1.6" marker-end="url(#ah)"/>
+
+<!-- Stability check -->
+<rect x="310" y="1504" width="440" height="56" rx="6" fill="#f0fdfa" stroke="#0d9488" stroke-width="1.8"/>
+<text x="530" y="1524" text-anchor="middle" fill="#0f766e" font-size="12" font-weight="600">_check_stability( )   companion-form eigenvalues</text>
+<text x="530" y="1540" text-anchor="middle" fill="#0f766e" font-size="10.5">roots = vecm_res.roots    n_unit = |roots| &gt;= 0.99</text>
+<text x="530" y="1554" text-anchor="middle" fill="#0f766e" font-size="10.5">Warn if n_unit &gt; coint_rank   →   self._is_stable = bool</text>
+
+<line x1="530" y1="1560" x2="530" y2="1588" stroke="#475569" stroke-width="1.6" marker-end="url(#ah)"/>
+
+<!-- RETURN fit -->
+<polygon points="380,1588 710,1588 680,1628 350,1628" fill="#fffbeb" stroke="#d97706" stroke-width="1.8"/>
+<text x="530" y="1606" text-anchor="middle" fill="#92400e" font-size="11" font-weight="600">RETURN dict: {alpha, beta, gamma, sigma_u,</text>
+<text x="530" y="1620" text-anchor="middle" fill="#92400e" font-size="10.5">ect, resid, fittedvalues, k_ar_diff, coint_rank, is_stable, recon_angle_deg}</text>
+
+<line x1="530" y1="1628" x2="530" y2="1660" stroke="#475569" stroke-width="1.6" marker-end="url(#ah)"/>
+
+<!-- Connector C -->
+<circle cx="530" cy="1676" r="16" fill="#f0fdf4" stroke="#22c55e" stroke-width="2"/>
+<text x="530" y="1680" text-anchor="middle" fill="#15803d" font-size="11" font-weight="600">C</text>
+
+<!-- ===== SECTION 4: Utility Methods ===== -->
+<line x1="530" y1="1692" x2="530" y2="1740" stroke="#475569" stroke-width="1.6" marker-end="url(#ah)"/>
+
+<!-- summary() -->
+<rect x="40" y="1750" width="210" height="130" rx="6" fill="#ffffff" stroke="#64748b" stroke-width="1.8"/>
+<text x="145" y="1772" text-anchor="middle" fill="#334155" font-size="12" font-weight="600">summary()</text>
+<text x="145" y="1790" text-anchor="middle" fill="#475569" font-size="10">_require_fitted check</text>
+<text x="145" y="1806" text-anchor="middle" fill="#475569" font-size="10">Print m, T, k, r*, det</text>
+<text x="145" y="1822" text-anchor="middle" fill="#475569" font-size="10">α with t-stats &amp; p-vals</text>
+<text x="145" y="1838" text-anchor="middle" fill="#475569" font-size="10">Flag WEAKLY EXOGENOUS</text>
+<text x="145" y="1854" text-anchor="middle" fill="#475569" font-size="10">Print β, Γ list</text>
+<text x="145" y="1870" text-anchor="middle" fill="#475569" font-size="10">Stability + β recon verdict</text>
+
+<!-- forecast() -->
+<rect x="274" y="1750" width="210" height="130" rx="6" fill="#ffffff" stroke="#64748b" stroke-width="1.8"/>
+<text x="379" y="1772" text-anchor="middle" fill="#334155" font-size="12" font-weight="600">forecast(steps)</text>
+<text x="379" y="1790" text-anchor="middle" fill="#475569" font-size="10">_require_fitted check</text>
+<text x="379" y="1806" text-anchor="middle" fill="#475569" font-size="10">vecm_res.predict(steps)</text>
+<text x="379" y="1822" text-anchor="middle" fill="#475569" font-size="10">ΔX forecast → cumsum</text>
+<text x="379" y="1838" text-anchor="middle" fill="#475569" font-size="10">+ last observed level</text>
+<text x="379" y="1854" text-anchor="middle" fill="#475569" font-size="10">Build DatetimeIndex</text>
+<text x="379" y="1870" text-anchor="middle" fill="#475569" font-size="10">Return DataFrame (steps × m)</text>
+
+<!-- impulse_response() -->
+<rect x="508" y="1750" width="210" height="130" rx="6" fill="#ffffff" stroke="#64748b" stroke-width="1.8"/>
+<text x="613" y="1772" text-anchor="middle" fill="#334155" font-size="12" font-weight="600">impulse_response()</text>
+<text x="613" y="1790" text-anchor="middle" fill="#475569" font-size="10">_require_fitted check</text>
+<text x="613" y="1806" text-anchor="middle" fill="#475569" font-size="10">vecm_res.irf(periods)</text>
+<text x="613" y="1822" text-anchor="middle" fill="#475569" font-size="10">orth or raw IRFs</text>
+<text x="613" y="1838" text-anchor="middle" fill="#475569" font-size="10">shape: (periods+1, m, m)</text>
+<text x="613" y="1854" text-anchor="middle" fill="#475569" font-size="10">Reshape → MultiIndex DF</text>
+<text x="613" y="1870" text-anchor="middle" fill="#475569" font-size="10">(shock → response)</text>
+
+<!-- plot() -->
+<rect x="742" y="1750" width="210" height="130" rx="6" fill="#ffffff" stroke="#64748b" stroke-width="1.8"/>
+<text x="847" y="1772" text-anchor="middle" fill="#334155" font-size="12" font-weight="600">plot()</text>
+<text x="847" y="1790" text-anchor="middle" fill="#475569" font-size="10">_require_fitted check</text>
+<text x="847" y="1806" text-anchor="middle" fill="#475569" font-size="10">r* subplots (one per ECT)</text>
+<text x="847" y="1822" text-anchor="middle" fill="#475569" font-size="10">Plot ECT_j vs time</text>
+<text x="847" y="1838" text-anchor="middle" fill="#475569" font-size="10">μ line + ±2σ bands</text>
+<text x="847" y="1854" text-anchor="middle" fill="#475569" font-size="10">Shaded ±2σ region</text>
+<text x="847" y="1870" text-anchor="middle" fill="#475569" font-size="10">plt.show()</text>
+
+<!-- ===== SECTION 5: __main__ ===== -->
+<circle cx="530" cy="1924" r="16" fill="#f0fdf4" stroke="#22c55e" stroke-width="2"/>
+<text x="530" y="1928" text-anchor="middle" fill="#15803d" font-size="11" font-weight="600">C</text>
+
+<line x1="530" y1="1940" x2="530" y2="1970" stroke="#475569" stroke-width="1.6" marker-end="url(#ah)"/>
+
+<polygon points="530,1970 700,2002 530,2034 360,2002" fill="#faf5ff" stroke="#9333ea" stroke-width="2"/>
+<text x="530" y="1999" text-anchor="middle" fill="#6b21a8" font-size="11.5">__name__ ==</text>
+<text x="530" y="2015" text-anchor="middle" fill="#6b21a8" font-size="11.5">"__main__"?</text>
+
+<line x1="700" y1="2002" x2="820" y2="2002" stroke="#dc2626" stroke-width="1.6" marker-end="url(#ahr)"/>
+<text x="760" y="1996" text-anchor="middle" fill="#dc2626" font-size="10" font-weight="600">No</text>
+<rect x="820" y="1984" width="180" height="36" rx="6" fill="#ffffff" stroke="#64748b" stroke-width="1.8"/>
+<text x="910" y="2002" text-anchor="middle" fill="#334155" font-size="11" font-weight="600">Module available</text>
+<text x="910" y="2016" text-anchor="middle" fill="#475569" font-size="10">for external imports</text>
+
+<line x1="530" y1="2034" x2="530" y2="2062" stroke="#16a34a" stroke-width="1.6" marker-end="url(#ahg)"/>
+<text x="542" y="2052" text-anchor="middle" fill="#16a34a" font-size="10" font-weight="600">Yes</text>
+
+<polygon points="400,2062 680,2062 650,2100 370,2100" fill="#eff6ff" stroke="#2563eb" stroke-width="1.8"/>
+<text x="530" y="2080" text-anchor="middle" fill="#1e40af" font-size="11">yf.download(RELIANCE, TCS, INFY</text>
+<text x="530" y="2094" text-anchor="middle" fill="#1e40af" font-size="10.5">2020–2024)  →  log_prices = np.log(raw)</text>
+
+<line x1="530" y1="2100" x2="530" y2="2126" stroke="#475569" stroke-width="1.6" marker-end="url(#ah)"/>
+
+<rect x="310" y="2126" width="440" height="44" rx="6" fill="#f0fdfa" stroke="#0d9488" stroke-width="1.8"/>
+<text x="530" y="2146" text-anchor="middle" fill="#0f766e" font-size="11.5" font-weight="600">jt = JohansenTest(log_prices, ...).run()</text>
+<text x="530" y="2162" text-anchor="middle" fill="#0f766e" font-size="10">Triggers full Johansen pipeline → rank r*, k_ar_diff</text>
+
+<line x1="530" y1="2170" x2="530" y2="2196" stroke="#475569" stroke-width="1.6" marker-end="url(#ah)"/>
+
+<rect x="310" y="2196" width="440" height="44" rx="6" fill="#f0fdfa" stroke="#0d9488" stroke-width="1.8"/>
+<text x="530" y="2216" text-anchor="middle" fill="#0f766e" font-size="11.5" font-weight="600">vm = VECMModel.from_johansen(jt)</text>
+<text x="530" y="2232" text-anchor="middle" fill="#0f766e" font-size="10">Classmethod extracts rank, k_ar_diff, det_order, data</text>
+
+<line x1="530" y1="2240" x2="530" y2="2266" stroke="#475569" stroke-width="1.6" marker-end="url(#ah)"/>
+
+<rect x="330" y="2266" width="400" height="34" rx="6" fill="#f0fdfa" stroke="#0d9488" stroke-width="1.8"/>
+<text x="530" y="2287" text-anchor="middle" fill="#0f766e" font-size="11.5" font-weight="600">result = vm.fit()</text>
+
+<line x1="530" y1="2300" x2="530" y2="2326" stroke="#475569" stroke-width="1.6" marker-end="url(#ah)"/>
+
+<polygon points="400,2326 680,2326 650,2366 370,2366" fill="#fffbeb" stroke="#d97706" stroke-width="1.8"/>
+<text x="530" y="2344" text-anchor="middle" fill="#92400e" font-size="11" font-weight="600">vm.summary()  |  ect = vm.get_ect()</text>
+<text x="530" y="2358" text-anchor="middle" fill="#92400e" font-size="10.5">fc = vm.forecast(10)  |  vm.plot()</text>
+
+<line x1="530" y1="2366" x2="530" y2="2400" stroke="#475569" stroke-width="1.6" marker-end="url(#ah)"/>
+
+<ellipse cx="530" cy="2422" rx="130" ry="22" fill="#f0fdf4" stroke="#16a34a" stroke-width="2"/>
+<text x="530" y="2427" text-anchor="middle" fill="#166534" font-size="13" font-weight="600">END</text>
+
+<!-- Math box -->
+<rect x="46" y="2470" width="968" height="160" rx="10" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.5"/>
+<text x="530" y="2492" text-anchor="middle" fill="#3b82f6" font-size="12" font-weight="600">KEY MATHEMATICS (VECM)</text>
+<text x="66" y="2514" class="lbl-math">VECM equation:  dX_t = C + alpha * beta' * X_{t-1}  +  Gamma_1*dX_{t-1} + ... + Gamma_k*dX_{t-k}  + eta_t</text>
+<text x="66" y="2532" class="lbl-math">alpha   (m x r*)  adjustment speeds   |   beta  (m x r*)  cointegrating vectors</text>
+<text x="66" y="2550" class="lbl-math">Gamma_j (m x m)   short-run lag matrices (k = k_ar_diff of them)</text>
+<text x="66" y="2568" class="lbl-math">ECT_t = beta' * X_t    stationary spread — fed to Kalman Filter and signal generator</text>
+<text x="66" y="2586" class="lbl-math">Beta reconciliation: max canonical angle between VECM beta and Johansen beta. OK if angle &lt;= 15 degrees.</text>
+<text x="66" y="2604" class="lbl-math">Pipeline: StationarityTest → VAROptimalLagSelect → JohansenTest → VECMModel → VECMDiagnostics</text>
+
+</svg>
+</div>
+<div class="footer">Dark Wing &mdash; Financial Mathematics Division &nbsp;|&nbsp; fit_vecm.py Code Flowchart &nbsp;|&nbsp; 2026</div>
+</body>
+</html>

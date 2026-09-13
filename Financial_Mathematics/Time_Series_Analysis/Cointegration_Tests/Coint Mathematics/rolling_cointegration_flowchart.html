@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Rolling Cointegration — Code Flowchart | Dark Wing</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#f8fafc;color:#0f172a;font-family:'Inter',sans-serif;min-height:100vh;padding:30px 20px 60px}
+.header{text-align:center;margin-bottom:32px}
+.header h1{font-size:1.9rem;font-weight:700;color:#1e293b;margin-bottom:8px}
+.header p{color:#475569;font-size:.9rem}
+.header .sub{font-family:'JetBrains Mono',monospace;font-size:.78rem;color:#64748b;margin-top:5px}
+.legend{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;margin-bottom:36px;padding:14px 22px;background:#ffffff;border:1px solid #e2e8f0;border-radius:12px;max-width:960px;margin-left:auto;margin-right:auto;box-shadow:0 4px 6px -1px rgba(0,0,0,0.05)}
+.legend-item{display:flex;align-items:center;gap:7px;font-size:.76rem;color:#475569;font-weight:500}
+.chart-wrapper{display:flex;justify-content:center;overflow-x:auto}
+svg.fc{font-family:'Inter',sans-serif}
+.lbl-sec{fill:#94a3b8;font-size:9.5px;font-family:'JetBrains Mono',monospace;letter-spacing:1px;font-weight:600;font-style:italic}
+.lbl-math{fill:#334155;font-size:10.5px;font-family:'JetBrains Mono',monospace}
+.footer{text-align:center;margin-top:28px;color:#64748b;font-size:.78rem;font-family:'JetBrains Mono',monospace}
+</style>
+</head>
+<body>
+<div class="header">
+  <h1>Rolling Cointegration &mdash; Code Flowchart</h1>
+  <p>Complete execution flow of <strong>rolling_cointegration.py</strong> &mdash; Dark Wing | Financial Mathematics</p>
+  <div class="sub">Financial_Mathematics/Time_Series_Analysis/Cointegration_Tests/rolling_cointegration.py</div>
+</div>
+
+<div class="legend">
+  <div class="legend-item"><svg width="56" height="24"><polygon points="10,2 50,2 40,22 0,22" fill="#eff6ff" stroke="#2563eb" stroke-width="2"/><text x="25" y="15" text-anchor="middle" fill="#1e40af" font-size="8" font-family="Inter">I/O</text></svg><span>Parallelogram (Input/Output)</span></div>
+  <div class="legend-item"><svg width="50" height="22"><ellipse cx="25" cy="11" rx="23" ry="10" fill="#f0fdf4" stroke="#16a34a" stroke-width="2"/><text x="25" y="14.5" text-anchor="middle" fill="#166534" font-size="9" font-family="Inter">Oval</text></svg><span>Terminal (Start/End)</span></div>
+  <div class="legend-item"><svg width="52" height="22"><rect x="4" y="3" width="44" height="16" rx="4" fill="#ffffff" stroke="#64748b" stroke-width="2"/><text x="26" y="14.5" text-anchor="middle" fill="#334155" font-size="9" font-family="Inter">Rect</text></svg><span>Rectangle (Process)</span></div>
+  <div class="legend-item"><svg width="52" height="24"><polygon points="26,1 50,12 26,23 2,12" fill="#faf5ff" stroke="#9333ea" stroke-width="2"/><text x="26" y="15.5" text-anchor="middle" fill="#6b21a8" font-size="9" font-family="Inter">Diam</text></svg><span>Diamond (Decision)</span></div>
+  <div class="legend-item"><svg width="24" height="24"><circle cx="12" cy="12" r="10" fill="#f0fdf4" stroke="#22c55e" stroke-width="2"/><text x="12" y="15.5" text-anchor="middle" fill="#15803d" font-size="9" font-family="Inter" font-weight="600">A</text></svg><span>Circle (Connector)</span></div>
+  <div class="legend-item"><svg width="52" height="22"><rect x="4" y="3" width="44" height="16" rx="4" fill="#f0fdfa" stroke="#0d9488" stroke-width="2"/><text x="26" y="14.5" text-anchor="middle" fill="#0f766e" font-size="9" font-family="Inter">Sub</text></svg><span>Sub-process Call</span></div>
+  <div class="legend-item"><svg width="52" height="22"><rect x="4" y="3" width="44" height="16" rx="4" fill="#fef2f2" stroke="#dc2626" stroke-width="2"/><text x="26" y="14.5" text-anchor="middle" fill="#991b1b" font-size="9" font-family="Inter">Err</text></svg><span>Exception/Error</span></div>
+  <div class="legend-item"><svg width="56" height="24"><polygon points="10,2 50,2 40,22 0,22" fill="#fffbeb" stroke="#d97706" stroke-width="2"/><text x="25" y="15" text-anchor="middle" fill="#92400e" font-size="8" font-family="Inter">Out</text></svg><span>Return/Output</span></div>
+</div>
+
+<div class="chart-wrapper">
+<svg class="fc" width="1060" height="3560" viewBox="0 0 1060 3560">
+<defs>
+<marker id="ah" markerWidth="9" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0,9 3.5,0 7" fill="#475569"/></marker>
+<marker id="ahg" markerWidth="9" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0,9 3.5,0 7" fill="#16a34a"/></marker>
+<marker id="ahr" markerWidth="9" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0,9 3.5,0 7" fill="#dc2626"/></marker>
+</defs>
+
+<!-- SECTION 1: __init__                                              -->
+<!-- ================================================================ -->
+
+<!-- START terminal -->
+<ellipse cx="530" cy="70" rx="164" ry="22" fill="#f0fdf4" stroke="#16a34a" stroke-width="2"/>
+<text x="530" y="75" text-anchor="middle" fill="#166534" font-size="13" font-weight="600">START: RollingCointegration( )</text>
+
+<!-- Arrow START → INPUT -->
+<line x1="530" y1="92" x2="530" y2="106" stroke="#475569" stroke-width="1.6" marker-end="url(#ah)"/>
+
+<!-- INPUT parallelogram (proper 4-point) -->
+<polygon points="400,106 670,106 640,146 370,146" fill="#eff6ff" stroke="#2563eb" stroke-width="1.8"/>
+<text x="527" y="122" text-anchor="middle" fill="#1e40af" font-size="11">INPUT: data(DataFrame), window=252, step=1,</text>
+<text x="527" y="136" text-anchor="middle" fill="#1e40af" font-size="10.5">method, sig_level=0.05, min_obs=None</text>
+
+<!-- Arrow INPUT → Validation -->
+<line x1="530" y1="146" x2="530" y2="162" stroke="#475569" stroke-width="1.6" marker-end="url(#ah)"/>
+
+<!-- PROC: Validation -->
+<rect x="280" y="162" width="500" height="120" rx="6" fill="#ffffff" stroke="#64748b" stroke-width="1.8"/>
+<text x="530" y="182" text-anchor="middle" fill="#334155" font-size="12" font-weight="600">Input Validation Block</text>
+<text x="530" y="198" text-anchor="middle" fill="#475569" font-size="10.5">isinstance(data, DataFrame)?  data.shape[1] &gt;= 2?</text>
+<text x="530" y="212" text-anchor="middle" fill="#475569" font-size="10.5">method == 'engle_granger'  →  exactly 2 cols?</text>
+<text x="530" y="226" text-anchor="middle" fill="#475569" font-size="10.5">method in ('engle_granger', 'johansen')?</text>
+<text x="530" y="240" text-anchor="middle" fill="#475569" font-size="10.5">window &gt;= 50?  step &gt;= 1?  0 &lt; sig_level &lt; 1?</text>
+<text x="530" y="254" text-anchor="middle" fill="#475569" font-size="10.5">T &gt;= window + 10?  (enough data check)</text>
+
+<!-- Arrow Validation → DEC -->
+<line x1="530" y1="282" x2="530" y2="304" stroke="#475569" stroke-width="1.6" marker-end="url(#ah)"/>
+
+<!-- DEC: All validations pass? -->
+<polygon points="530,304 670,334 530,364 390,334" fill="#faf5ff" stroke="#9333ea" stroke-width="2"/>
+<text x="530" y="331" text-anchor="middle" fill="#6b21a8" font-size="11.5">All validations</text>
+<text x="530" y="347" text-anchor="middle" fill="#6b21a8" font-size="11.5">pass?</text>
+
+<!-- No → raise (safely within page) -->
+<line x1="670" y1="334" x2="790" y2="334" stroke="#dc2626" stroke-width="1.6" marker-end="url(#ahr)"/>
+<text x="730" y="327" text-anchor="middle" fill="#dc2626" font-size="10" font-weight="600">No</text>
+<rect x="790" y="310" width="222" height="48" rx="6" fill="#fef2f2" stroke="#dc2626" stroke-width="1.8"/>
+<text x="901" y="328" text-anchor="middle" fill="#991b1b" font-size="11" font-weight="600">raise TypeError</text>
+<text x="901" y="342" text-anchor="middle" fill="#991b1b" font-size="10">or ValueError</text>
+<text x="901" y="354" text-anchor="middle" fill="#991b1b" font-size="10">(specific message)</text>
+
+<!-- Yes → store attrs -->
+<line x1="530" y1="364" x2="530" y2="392" stroke="#16a34a" stroke-width="1.6" marker-end="url(#ahg)"/>
+<text x="542" y="382" text-anchor="middle" fill="#16a34a" font-size="10" font-weight="600">Yes</text>
+
+<!-- PROC: Store Core Attributes -->
+<rect x="290" y="392" width="480" height="92" rx="6" fill="#ffffff" stroke="#64748b" stroke-width="1.8"/>
+<text x="530" y="412" text-anchor="middle" fill="#334155" font-size="12" font-weight="600">Store Core Attributes</text>
+<text x="530" y="428" text-anchor="middle" fill="#475569" font-size="10.5">self.data = data.copy().dropna()</text>
+<text x="530" y="442" text-anchor="middle" fill="#475569" font-size="10.5">self.T, self.m, self.cols, self.window, self.step</text>
+<text x="530" y="456" text-anchor="middle" fill="#475569" font-size="10.5">self.method, self.sig_level</text>
+<text x="530" y="470" text-anchor="middle" fill="#475569" font-size="10.5">self.min_obs = min_obs or window</text>
+
+<line x1="530" y1="484" x2="530" y2="510" stroke="#475569" stroke-width="1.6" marker-end="url(#ah)"/>
+
+<!-- PROC: Init result placeholders -->
+<rect x="330" y="510" width="400" height="44" rx="6" fill="#ffffff" stroke="#64748b" stroke-width="1.8"/>
+<text x="530" y="530" text-anchor="middle" fill="#334155" font-size="12" font-weight="600">Initialize Result Placeholders</text>
+<text x="530" y="544" text-anchor="middle" fill="#475569" font-size="10.5">self.results_df = None   self.stability_score = None</text>
+
+<line x1="530" y1="554" x2="530" y2="580" stroke="#475569" stroke-width="1.6" marker-end="url(#ah)"/>
+
+<!-- Connector A -->
+<circle cx="530" cy="596" r="16" fill="#f0fdf4" stroke="#22c55e" stroke-width="2"/>
+<text x="530" y="600" text-anchor="middle" fill="#15803d" font-size="11" font-weight="600">A</text>
+
+<line x1="530" y1="612" x2="530" y2="658" stroke="#475569" stroke-width="1.6" marker-end="url(#ah)"/>
+
+<!-- ================================================================ -->
+<!-- SECTION 2: run() — rolling window loop                          -->
+<!-- ================================================================ -->
+
+<!-- PROC: Compute window positions -->
+<rect x="290" y="658" width="480" height="60" rx="6" fill="#ffffff" stroke="#64748b" stroke-width="1.8"/>
+<text x="530" y="678" text-anchor="middle" fill="#334155" font-size="12" font-weight="600">Compute Window Positions</text>
+<text x="530" y="694" text-anchor="middle" fill="#475569" font-size="10.5">start_positions = range(0, T − window + 1, step)</text>
+<text x="530" y="708" text-anchor="middle" fill="#475569" font-size="10.5">n_windows = len(start_positions)  |  records=[]  |  indices=[]</text>
+
+<line x1="530" y1="718" x2="530" y2="744" stroke="#475569" stroke-width="1.6" marker-end="url(#ah)"/>
+
+<!-- IO: print progress header (proper parallelogram) -->
+<polygon points="420,744 640,744 610,784 390,784" fill="#eff6ff" stroke="#2563eb" stroke-width="1.8"/>
+<text x="527" y="762" text-anchor="middle" fill="#1e40af" font-size="11">print: Running n_windows windows</text>
+<text x="527" y="776" text-anchor="middle" fill="#1e40af" font-size="10.5">(method, window, step)</text>
+
+<line x1="530" y1="784" x2="530" y2="828" stroke="#475569" stroke-width="1.6" marker-end="url(#ah)"/>
+
+<!-- ===== MAIN ROLLING LOOP ===== -->
+
+<!-- PROC: Loop iterator -->
+<rect x="300" y="828" width="460" height="44" rx="6" fill="#ffffff" stroke="#64748b" stroke-width="1.8"/>
+<text x="530" y="848" text-anchor="middle" fill="#334155" font-size="12" font-weight="600">for i, start in enumerate(start_positions):</text>
+<text x="530" y="862" text-anchor="middle" fill="#475569" font-size="10.5">end = start + window  |  window_data = data.iloc[start : end]</text>
+
+<line x1="530" y1="872" x2="530" y2="898" stroke="#475569" stroke-width="1.6" marker-end="url(#ah)"/>
+
+<!-- DEC: len(window_data) < min_obs? -->
+<polygon points="530,898 700,928 530,958 360,928" fill="#faf5ff" stroke="#9333ea" stroke-width="2"/>
+<text x="530" y="924" text-anchor="middle" fill="#6b21a8" font-size="11">len(window_data)</text>
+<text x="530" y="940" text-anchor="middle" fill="#6b21a8" font-size="11">&lt; min_obs?</text>
+
+<!-- Yes → continue (skip window) — loop back from TOP of continue box -->
+<line x1="700" y1="928" x2="800" y2="928" stroke="#dc2626" stroke-width="1.6" marker-end="url(#ahr)"/>
+<text x="750" y="921" text-anchor="middle" fill="#dc2626" font-size="10" font-weight="600">Yes</text>
+<rect x="800" y="910" width="150" height="36" rx="6" fill="#fef2f2" stroke="#dc2626" stroke-width="1.8"/>
+<text x="875" y="928" text-anchor="middle" fill="#991b1b" font-size="11" font-weight="600">continue</text>
+<text x="875" y="942" text-anchor="middle" fill="#991b1b" font-size="10">(skip this window)</text>
+<!-- Loop from TOP of continue box back to loop iterator top -->
+<path d="M 875 910 L 875 840 L 760 840" stroke="#dc2626" stroke-width="1.3" fill="none" stroke-dasharray="5,3" marker-end="url(#ahr)"/>
+
+<!-- No → record end_date -->
+<line x1="530" y1="958" x2="530" y2="984" stroke="#16a34a" stroke-width="1.6" marker-end="url(#ahg)"/>
+<text x="542" y="975" text-anchor="middle" fill="#16a34a" font-size="10" font-weight="600">No</text>
+
+<!-- PROC: record end_date -->
+<rect x="340" y="984" width="380" height="28" rx="6" fill="#ffffff" stroke="#64748b" stroke-width="1.8"/>
+<text x="530" y="1002" text-anchor="middle" fill="#334155" font-size="11">end_date = data.index[end − 1]   |   indices.append(end_date)</text>
+
+<line x1="530" y1="1012" x2="530" y2="1038" stroke="#475569" stroke-width="1.6" marker-end="url(#ah)"/>
+
+<!-- DEC: method == 'engle_granger'? -->
+<polygon points="530,1038 700,1068 530,1098 360,1068" fill="#faf5ff" stroke="#9333ea" stroke-width="2"/>
+<text x="530" y="1061" text-anchor="middle" fill="#6b21a8" font-size="11">method ==</text>
+<text x="530" y="1077" text-anchor="middle" fill="#6b21a8" font-size="11">'engle_granger'?</text>
+
+<!-- Yes → _run_eg_window (LEFT BRANCH) -->
+<line x1="360" y1="1068" x2="218" y2="1068" stroke="#16a34a" stroke-width="1.6" marker-end="url(#ahg)"/>
+<text x="289" y="1062" text-anchor="middle" fill="#16a34a" font-size="10" font-weight="600">Yes</text>
+
+<rect x="44" y="1044" width="174" height="62" rx="6" fill="#f0fdfa" stroke="#0d9488" stroke-width="1.8"/>
+<text x="131" y="1064" text-anchor="middle" fill="#0f766e" font-size="11" font-weight="600">_run_eg_window()</text>
+<text x="131" y="1078" text-anchor="middle" fill="#0f766e" font-size="10">EngleGrangerTest(y, x)</text>
+<text x="131" y="1092" text-anchor="middle" fill="#0f766e" font-size="10">verify_i1=False (speed)</text>
+
+<line x1="131" y1="1106" x2="131" y2="1132" stroke="#475569" stroke-width="1.5" marker-end="url(#ah)"/>
+
+<!-- EG exception handler -->
+<rect x="44" y="1132" width="174" height="36" rx="6" fill="#fef2f2" stroke="#dc2626" stroke-width="1.8"/>
+<text x="131" y="1150" text-anchor="middle" fill="#991b1b" font-size="10" font-weight="600">EG fails?</text>
+<text x="131" y="1164" text-anchor="middle" fill="#991b1b" font-size="9.5">warn → return NaN dict</text>
+
+<!-- EG result merge path to center x=530 -->
+<path d="M 131 1168 L 131 1210 L 530 1210" stroke="#475569" stroke-width="1.6" fill="none"/>
+
+<!-- No → _run_johansen_window (RIGHT BRANCH) -->
+<line x1="700" y1="1068" x2="842" y2="1068" stroke="#dc2626" stroke-width="1.6" marker-end="url(#ahr)"/>
+<text x="771" y="1062" text-anchor="middle" fill="#dc2626" font-size="10" font-weight="600">No (Johansen)</text>
+
+<rect x="842" y="1044" width="174" height="62" rx="6" fill="#f0fdfa" stroke="#0d9488" stroke-width="1.8"/>
+<text x="929" y="1064" text-anchor="middle" fill="#0f766e" font-size="11" font-weight="600">_run_johansen_window()</text>
+<text x="929" y="1078" text-anchor="middle" fill="#0f766e" font-size="10">JohansenTest(window_data)</text>
+<text x="929" y="1092" text-anchor="middle" fill="#0f766e" font-size="10">k_ar_diff=1, verify_i1=False</text>
+
+<line x1="929" y1="1106" x2="929" y2="1132" stroke="#475569" stroke-width="1.5" marker-end="url(#ah)"/>
+
+<!-- Johansen exception handler -->
+<rect x="842" y="1132" width="174" height="36" rx="6" fill="#fef2f2" stroke="#dc2626" stroke-width="1.8"/>
+<text x="929" y="1150" text-anchor="middle" fill="#991b1b" font-size="10" font-weight="600">Johansen fails?</text>
+<text x="929" y="1164" text-anchor="middle" fill="#991b1b" font-size="9.5">warn → return NaN dict</text>
+
+<!-- Johansen result merge path to center x=530 -->
+<path d="M 929 1168 L 929 1210 L 530 1210" stroke="#475569" stroke-width="1.6" fill="none"/>
+
+<!-- Single arrow from merge → append record -->
+<line x1="530" y1="1210" x2="530" y2="1238" stroke="#475569" stroke-width="1.6" marker-end="url(#ah)"/>
+
+<!-- PROC: Append record -->
+<rect x="300" y="1238" width="460" height="44" rx="6" fill="#ffffff" stroke="#64748b" stroke-width="1.8"/>
+<text x="530" y="1258" text-anchor="middle" fill="#334155" font-size="12" font-weight="600">Append Window Result</text>
+<text x="530" y="1272" text-anchor="middle" fill="#475569" font-size="10.5">records.append(record)  — {p_value, beta, alpha, is_cointegrated, spread_std}</text>
+
+<line x1="530" y1="1282" x2="530" y2="1308" stroke="#475569" stroke-width="1.6" marker-end="url(#ah)"/>
+
+<!-- PROC: Progress log -->
+<rect x="330" y="1308" width="400" height="36" rx="6" fill="#ffffff" stroke="#64748b" stroke-width="1.8"/>
+<text x="530" y="1326" text-anchor="middle" fill="#334155" font-size="11">if (i+1) % 50 == 0: print progress %</text>
+<text x="530" y="1340" text-anchor="middle" fill="#475569" font-size="10">"...N% complete (i / n_windows)"</text>
+
+<line x1="530" y1="1344" x2="530" y2="1370" stroke="#475569" stroke-width="1.6" marker-end="url(#ah)"/>
+
+<!-- DEC: More windows remaining? -->
+<polygon points="530,1370 680,1400 530,1430 380,1400" fill="#faf5ff" stroke="#9333ea" stroke-width="2"/>
+<text x="530" y="1397" text-anchor="middle" fill="#6b21a8" font-size="11.5">More windows</text>
+<text x="530" y="1413" text-anchor="middle" fill="#6b21a8" font-size="11.5">remaining?</text>
+
+<!-- Yes → loop back from TOP of loop iterator box -->
+<line x1="680" y1="1400" x2="780" y2="1400" stroke="#16a34a" stroke-width="1.6" marker-end="url(#ahg)"/>
+<text x="730" y="1394" text-anchor="middle" fill="#16a34a" font-size="10" font-weight="600">Yes</text>
+<path d="M 780 1400 L 820 1400 L 820 828 L 760 828" stroke="#16a34a" stroke-width="1.4" fill="none" stroke-dasharray="6,3" marker-end="url(#ahg)"/>
+
+<!-- No → build results_df -->
+<line x1="530" y1="1430" x2="530" y2="1458" stroke="#dc2626" stroke-width="1.6" marker-end="url(#ahr)"/>
+<text x="560" y="1448" text-anchor="middle" fill="#dc2626" font-size="10" font-weight="600">No (done)</text>
+
+<!-- PROC: Build results_df -->
+<rect x="290" y="1458" width="480" height="60" rx="6" fill="#ffffff" stroke="#64748b" stroke-width="1.8"/>
+<text x="530" y="1478" text-anchor="middle" fill="#334155" font-size="12" font-weight="600">Build results_df</text>
+<text x="530" y="1494" text-anchor="middle" fill="#475569" font-size="10.5">self.results_df = pd.DataFrame(records, index=indices)</text>
+<text x="530" y="1508" text-anchor="middle" fill="#475569" font-size="10.5">results_df.index.name = "window_end"</text>
+
+<line x1="530" y1="1518" x2="530" y2="1544" stroke="#475569" stroke-width="1.6" marker-end="url(#ah)"/>
+
+<!-- PROC: Compute stability score -->
+<rect x="290" y="1544" width="480" height="60" rx="6" fill="#ffffff" stroke="#64748b" stroke-width="1.8"/>
+<text x="530" y="1564" text-anchor="middle" fill="#334155" font-size="12" font-weight="600">Compute Stability Score</text>
+<text x="530" y="1580" text-anchor="middle" fill="#475569" font-size="10.5">valid_mask = results_df['p_value'].notna()</text>
+<text x="530" y="1594" text-anchor="middle" fill="#475569" font-size="10.5">self.stability_score = mean(is_cointegrated[valid_mask])  ∈ [0, 1]</text>
+
+<line x1="530" y1="1604" x2="530" y2="1630" stroke="#475569" stroke-width="1.6" marker-end="url(#ah)"/>
+
+<!-- IO: print done + stability (proper parallelogram) -->
+<polygon points="420,1630 660,1630 630,1670 390,1670" fill="#eff6ff" stroke="#2563eb" stroke-width="1.8"/>
+<text x="527" y="1648" text-anchor="middle" fill="#1e40af" font-size="11">print: Done. N windows processed.</text>
+<text x="527" y="1662" text-anchor="middle" fill="#1e40af" font-size="10.5">print: Cointegration Stability Score: X.XX%</text>
+
+<line x1="530" y1="1670" x2="530" y2="1696" stroke="#475569" stroke-width="1.6" marker-end="url(#ah)"/>
+
+<!-- OUTPUT: return results_df (proper parallelogram) -->
+<polygon points="415,1696 655,1696 625,1736 385,1736" fill="#fffbeb" stroke="#d97706" stroke-width="1.8"/>
+<text x="530" y="1714" text-anchor="middle" fill="#92400e" font-size="11" font-weight="600">RETURN self.results_df (pd.DataFrame)</text>
+<text x="530" y="1728" text-anchor="middle" fill="#92400e" font-size="10.5" font-weight="600">indexed by window_end date</text>
+
+<line x1="530" y1="1736" x2="530" y2="1764" stroke="#475569" stroke-width="1.6" marker-end="url(#ah)"/>
+
+<!-- Connector B -->
+<circle cx="530" cy="1780" r="16" fill="#f0fdf4" stroke="#22c55e" stroke-width="2"/>
+<text x="530" y="1784" text-anchor="middle" fill="#15803d" font-size="11" font-weight="600">B</text>
+
+<!-- ================================================================ -->
+<!-- SECTION 3: analysis & reporting methods                          -->
+<!-- ================================================================ -->
+<line x1="530" y1="1796" x2="530" y2="1850" stroke="#475569" stroke-width="1.6" marker-end="url(#ah)"/>
+
+<!-- current_status() -->
+<rect x="44" y="1860" width="210" height="120" rx="6" fill="#ffffff" stroke="#64748b" stroke-width="1.8"/>
+<text x="149" y="1882" text-anchor="middle" fill="#334155" font-size="12" font-weight="600">current_status()</text>
+<text x="149" y="1900" text-anchor="middle" fill="#475569" font-size="10">_require_fitted check</text>
+<text x="149" y="1916" text-anchor="middle" fill="#475569" font-size="10">last = results_df.iloc[-1]</text>
+<text x="149" y="1932" text-anchor="middle" fill="#475569" font-size="10">return dict: date,</text>
+<text x="149" y="1946" text-anchor="middle" fill="#475569" font-size="10">is_cointegrated, p_value,</text>
+<text x="149" y="1960" text-anchor="middle" fill="#475569" font-size="10">beta, stability_score</text>
+
+<!-- cointegration_windows() -->
+<rect x="278" y="1860" width="210" height="120" rx="6" fill="#ffffff" stroke="#64748b" stroke-width="1.8"/>
+<text x="383" y="1882" text-anchor="middle" fill="#334155" font-size="12" font-weight="600">coint_windows()</text>
+<text x="383" y="1900" text-anchor="middle" fill="#475569" font-size="10">_require_fitted check</text>
+<text x="383" y="1916" text-anchor="middle" fill="#475569" font-size="10">return results_df where</text>
+<text x="383" y="1932" text-anchor="middle" fill="#475569" font-size="10">is_cointegrated == True</text>
+<text x="383" y="1948" text-anchor="middle" fill="#475569" font-size="10">(cointegrated window</text>
+<text x="383" y="1962" text-anchor="middle" fill="#475569" font-size="10">rows only)</text>
+
+<!-- rolling_beta() -->
+<rect x="512" y="1860" width="210" height="120" rx="6" fill="#ffffff" stroke="#64748b" stroke-width="1.8"/>
+<text x="617" y="1882" text-anchor="middle" fill="#334155" font-size="12" font-weight="600">rolling_beta()</text>
+<text x="617" y="1900" text-anchor="middle" fill="#475569" font-size="10">_require_fitted check</text>
+<text x="617" y="1916" text-anchor="middle" fill="#475569" font-size="10">return results_df['beta']</text>
+<text x="617" y="1932" text-anchor="middle" fill="#475569" font-size="10">.dropna()</text>
+<text x="617" y="1948" text-anchor="middle" fill="#475569" font-size="10">time-series of rolling</text>
+<text x="617" y="1962" text-anchor="middle" fill="#475569" font-size="10">hedge ratios β(t)</text>
+
+<!-- summary() -->
+<rect x="746" y="1860" width="210" height="120" rx="6" fill="#ffffff" stroke="#64748b" stroke-width="1.8"/>
+<text x="851" y="1882" text-anchor="middle" fill="#334155" font-size="12" font-weight="600">summary()</text>
+<text x="851" y="1900" text-anchor="middle" fill="#475569" font-size="10">_require_fitted check</text>
+<text x="851" y="1916" text-anchor="middle" fill="#475569" font-size="10">Print: method, cols, T,</text>
+<text x="851" y="1932" text-anchor="middle" fill="#475569" font-size="10">window, step, n_windows</text>
+<text x="851" y="1948" text-anchor="middle" fill="#475569" font-size="10">Stability: ✅/⚠️/❌</text>
+<text x="851" y="1962" text-anchor="middle" fill="#475569" font-size="10">Rolling β stats (min/max)</text>
+
+<!-- plot() -->
+<rect x="380" y="2010" width="300" height="120" rx="6" fill="#ffffff" stroke="#64748b" stroke-width="1.8"/>
+<text x="530" y="2032" text-anchor="middle" fill="#334155" font-size="12" font-weight="600">plot()</text>
+<text x="530" y="2050" text-anchor="middle" fill="#475569" font-size="10">_require_fitted check</text>
+<text x="530" y="2066" text-anchor="middle" fill="#475569" font-size="10">3-panel dashboard (sharex=True):</text>
+<text x="530" y="2082" text-anchor="middle" fill="#475569" font-size="10">ax1: rolling p-value + sig_level line</text>
+<text x="530" y="2096" text-anchor="middle" fill="#475569" font-size="10">ax2: rolling hedge ratio β(t)</text>
+<text x="530" y="2110" text-anchor="middle" fill="#475569" font-size="10">ax3: regime shading (fill_between)</text>
+<text x="530" y="2124" text-anchor="middle" fill="#475569" font-size="10">plt.show()</text>
+
+<!-- Connector B below -->
+<circle cx="530" cy="2170" r="14" fill="#f0fdf4" stroke="#22c55e" stroke-width="2"/>
+<text x="530" y="2174" text-anchor="middle" fill="#15803d" font-size="10" font-weight="600">B</text>
+
+<!-- ================================================================ -->
+<!-- SECTION 4: __main__                                              -->
+<!-- ================================================================ -->
+<line x1="530" y1="2184" x2="530" y2="2222" stroke="#475569" stroke-width="1.6" marker-end="url(#ah)"/>
+
+<polygon points="530,2222 700,2254 530,2286 360,2254" fill="#faf5ff" stroke="#9333ea" stroke-width="2"/>
+<text x="530" y="2251" text-anchor="middle" fill="#6b21a8" font-size="11.5">__name__ ==</text>
+<text x="530" y="2267" text-anchor="middle" fill="#6b21a8" font-size="11.5">"__main__"?</text>
+
+<!-- No → module imported -->
+<line x1="700" y1="2254" x2="820" y2="2254" stroke="#dc2626" stroke-width="1.6" marker-end="url(#ahr)"/>
+<text x="760" y="2248" text-anchor="middle" fill="#dc2626" font-size="10" font-weight="600">No</text>
+<rect x="820" y="2236" width="180" height="36" rx="6" fill="#ffffff" stroke="#64748b" stroke-width="1.8"/>
+<text x="910" y="2254" text-anchor="middle" fill="#334155" font-size="11" font-weight="600">Module available</text>
+<text x="910" y="2268" text-anchor="middle" fill="#475569" font-size="10">for external imports</text>
+
+<!-- Yes → demo -->
+<line x1="530" y1="2286" x2="530" y2="2314" stroke="#16a34a" stroke-width="1.6" marker-end="url(#ahg)"/>
+<text x="542" y="2304" text-anchor="middle" fill="#16a34a" font-size="10" font-weight="600">Yes</text>
+
+<!-- IO: yf.download (proper parallelogram) -->
+<polygon points="420,2314 660,2314 630,2354 390,2354" fill="#eff6ff" stroke="#2563eb" stroke-width="1.8"/>
+<text x="527" y="2332" text-anchor="middle" fill="#1e40af" font-size="11">yf.download([RELIANCE.NS, TCS.NS]</text>
+<text x="527" y="2346" text-anchor="middle" fill="#1e40af" font-size="10.5">2018-2024, auto_adjust=True)["Close"]</text>
+
+<line x1="530" y1="2354" x2="530" y2="2380" stroke="#475569" stroke-width="1.6" marker-end="url(#ah)"/>
+
+<!-- PROC: log transform -->
+<rect x="370" y="2380" width="320" height="28" rx="6" fill="#ffffff" stroke="#64748b" stroke-width="1.8"/>
+<text x="530" y="2398" text-anchor="middle" fill="#334155" font-size="11.5" font-weight="600">log_prices = np.log(raw)</text>
+
+<line x1="530" y1="2408" x2="530" y2="2434" stroke="#475569" stroke-width="1.6" marker-end="url(#ah)"/>
+
+<!-- SUB: RollingCointegration(...) -->
+<rect x="270" y="2434" width="520" height="60" rx="6" fill="#f0fdfa" stroke="#0d9488" stroke-width="1.8"/>
+<text x="530" y="2454" text-anchor="middle" fill="#0f766e" font-size="11.5" font-weight="600">rc = RollingCointegration(log_prices,</text>
+<text x="530" y="2470" text-anchor="middle" fill="#0f766e" font-size="10.5">window=252, step=5, method='engle_granger', sig_level=0.05)</text>
+<text x="530" y="2484" text-anchor="middle" fill="#0f766e" font-size="10">Triggers full __init__ flow (§1 above)</text>
+
+<line x1="530" y1="2494" x2="530" y2="2520" stroke="#475569" stroke-width="1.6" marker-end="url(#ah)"/>
+
+<!-- SUB: rc.run() -->
+<rect x="370" y="2520" width="320" height="38" rx="6" fill="#f0fdfa" stroke="#0d9488" stroke-width="1.8"/>
+<text x="530" y="2540" text-anchor="middle" fill="#0f766e" font-size="11.5" font-weight="600">results_df = rc.run()</text>
+<text x="530" y="2552" text-anchor="middle" fill="#0f766e" font-size="10">Triggers full rolling loop (§2 above)</text>
+
+<line x1="530" y1="2558" x2="530" y2="2584" stroke="#475569" stroke-width="1.6" marker-end="url(#ah)"/>
+
+<!-- IO: summary + plot (proper parallelogram) -->
+<polygon points="420,2584 660,2584 630,2624 390,2624" fill="#eff6ff" stroke="#2563eb" stroke-width="1.8"/>
+<text x="527" y="2602" text-anchor="middle" fill="#1e40af" font-size="11">rc.summary()  →  print rolling stats</text>
+<text x="527" y="2616" text-anchor="middle" fill="#1e40af" font-size="10.5">rc.plot()  →  3-panel rolling dashboard</text>
+
+<line x1="530" y1="2624" x2="530" y2="2652" stroke="#475569" stroke-width="1.6" marker-end="url(#ah)"/>
+
+<!-- PROC: current_status -->
+<rect x="330" y="2652" width="400" height="36" rx="6" fill="#ffffff" stroke="#64748b" stroke-width="1.8"/>
+<text x="530" y="2670" text-anchor="middle" fill="#334155" font-size="11.5" font-weight="600">current = rc.current_status()</text>
+<text x="530" y="2682" text-anchor="middle" fill="#475569" font-size="10">print current status dict</text>
+
+<line x1="530" y1="2688" x2="530" y2="2714" stroke="#475569" stroke-width="1.6" marker-end="url(#ah)"/>
+
+<!-- OUTPUT: final (proper parallelogram) -->
+<polygon points="415,2714 675,2714 645,2754 385,2754" fill="#fffbeb" stroke="#d97706" stroke-width="1.8"/>
+<text x="530" y="2732" text-anchor="middle" fill="#92400e" font-size="11" font-weight="600">OUTPUT: results_df, stability_score,</text>
+<text x="530" y="2746" text-anchor="middle" fill="#92400e" font-size="10.5" font-weight="600">rolling β series, current status dict</text>
+
+<line x1="530" y1="2754" x2="530" y2="2788" stroke="#475569" stroke-width="1.6" marker-end="url(#ah)"/>
+
+<!-- END terminal -->
+<ellipse cx="530" cy="2810" rx="130" ry="22" fill="#f0fdf4" stroke="#16a34a" stroke-width="2"/>
+<text x="530" y="2815" text-anchor="middle" fill="#166534" font-size="13" font-weight="600">END</text>
+
+<!-- MATH REFERENCE BOX -->
+<rect x="46" y="2860" width="968" height="220" rx="10" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.5"/>
+<text x="530" y="2882" text-anchor="middle" fill="#3b82f6" font-size="12" font-weight="600">KEY MATHEMATICS (Rolling_Coint.tex)</text>
+<text x="66" y="2904" class="lbl-math">Rolling window: for t in {window, window+step, window+2*step, ...}: run EG or Johansen on data[t−window : t]</text>
+<text x="66" y="2922" class="lbl-math">EG window:       Y_t = alpha + beta * X_t + eps_t  →  ADF(eps_t)  →  p_value, beta, is_cointegrated</text>
+<text x="66" y="2940" class="lbl-math">Johansen window: coint_johansen(window_data)  →  rank r  →  pseudo_p = 0.01 if trace_r0 > CV else 0.50</text>
+<text x="66" y="2958" class="lbl-math">Stability score: fraction of valid windows where is_cointegrated == True  (0 = never cointegrated, 1 = always)</text>
+<text x="66" y="2976" class="lbl-math">Score &gt;= 0.75  →  ✅ HIGHLY STABLE (trade this pair)</text>
+<text x="66" y="2994" class="lbl-math">Score &gt;= 0.50  →  ⚠️  MODERATELY STABLE (trade with caution, monitor closely)</text>
+<text x="66" y="3012" class="lbl-math">Score &lt;  0.50  →  ❌ UNSTABLE (do not trade this pair algorithmically)</text>
+<text x="66" y="3030" class="lbl-math">Pipeline: StationarityTest --> EG/Johansen --> RollingCointegration --> Kalman Filter (dynamic beta)</text>
+
+</svg>
+</div>
+<div class="footer">Dark Wing &mdash; Financial Mathematics Division &nbsp;|&nbsp; rolling_cointegration.py Code Flowchart &nbsp;|&nbsp; 2026</div>
+</body>
+</html>

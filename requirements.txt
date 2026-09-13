@@ -1,0 +1,21 @@
+# Dark Wing - Quantitative Statistical Arbitrage Engine
+# Core Numerical & Data Processing
+numpy>=1.24.0
+pandas>=2.0.0
+scipy>=1.10.0
+statsmodels>=0.14.0
+
+# Visualization & Reporting
+matplotlib>=3.7.0
+
+# Market Data Acquisition
+yfinance>=0.2.30
+openpyxl>=3.1.0
+
+# Broker Execution APIs
+ibapi>=9.81.1.post1
+smartapi-python>=1.4.0
+pyotp>=2.8.0
+
+# Testing & Quality Assurance
+pytest>=7.0.0

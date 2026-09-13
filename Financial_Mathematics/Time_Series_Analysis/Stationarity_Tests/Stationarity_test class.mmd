@@ -1,0 +1,61 @@
+---
+references:
+  - "File:
+    /Financial_Mathematics/Time_Series_Analysis/Stationarity_Tests/TS_stationar\
+    ity_test.py"
+generationTime: 2026-08-11T09:51:27.810Z
+---
+classDiagram
+    %% StationarityTest and related libs
+    class StationarityTest {
+        +pd.DataFrame TS
+        +int? maxlag
+        +String regression_type
+        +String required_lag
+        +boolean regression_result
+        +__init__(pd.DataFrame|pd.Series time_series, int|None lag_max, String regression_type, String required_lag, boolean regression_result) void
+        +__repr__() String
+        -_validate_inputs() void
+        +difference(int order) pd.DataFrame
+        +test_adf() Dict
+        +test_kpss() Dict
+        +check_stationarity() Dict
+        +run() Dict
+    }
+
+    class DataFrame {
+        <<external>>
+    }
+    class Series {
+        <<external>>
+    }
+    class adfuller {
+        <<external>>
+    }
+    class kpss {
+        <<external>>
+    }
+    class TS_module {
+        +main() void
+    }
+
+    class RegressionType {
+        <<enumeration>>
+        c
+        ct
+        ctt
+        n
+    }
+    class LagCriteria {
+        <<enumeration>>
+        AIC
+        BIC
+        t-stat
+        None
+    }
+
+    StationarityTest *-- DataFrame : "1" contains
+    StationarityTest ..> Series : accepts
+    StationarityTest ..> adfuller : calls
+    StationarityTest ..> kpss : calls
+    TS_module --> StationarityTest : instantiates

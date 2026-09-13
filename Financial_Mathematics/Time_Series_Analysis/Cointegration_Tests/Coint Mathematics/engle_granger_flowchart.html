@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Engle-Granger Cointegration Test — Code Flowchart | Dark Wing</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#f8fafc;color:#0f172a;font-family:'Inter',sans-serif;min-height:100vh;padding:30px 20px 60px}
+.header{text-align:center;margin-bottom:32px}
+.header h1{font-size:1.9rem;font-weight:700;color:#1e293b;margin-bottom:8px}
+.header p{color:#475569;font-size:.9rem}
+.header .sub{font-family:'JetBrains Mono',monospace;font-size:.78rem;color:#64748b;margin-top:5px}
+.legend{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;margin-bottom:36px;padding:14px 22px;background:#ffffff;border:1px solid #e2e8f0;border-radius:12px;max-width:960px;margin-left:auto;margin-right:auto;box-shadow:0 4px 6px -1px rgba(0,0,0,0.05)}
+.legend-item{display:flex;align-items:center;gap:7px;font-size:.76rem;color:#475569;font-weight:500}
+.chart-wrapper{display:flex;justify-content:center;overflow-x:auto}
+svg.fc{font-family:'Inter',sans-serif}
+.lbl-sec{fill:#94a3b8;font-size:9.5px;font-family:'JetBrains Mono',monospace;letter-spacing:1px;font-weight:600;font-style:italic}
+.lbl-math{fill:#334155;font-size:10.5px;font-family:'JetBrains Mono',monospace}
+.footer{text-align:center;margin-top:28px;color:#64748b;font-size:.78rem;font-family:'JetBrains Mono',monospace}
+</style>
+</head>
+<body>
+<div class="header">
+  <h1>Engle-Granger Cointegration Test &mdash; Code Flowchart</h1>
+  <p>Complete execution flow of <strong>engle_granger.py</strong> &mdash; Dark Wing | Financial Mathematics</p>
+  <div class="sub">Financial_Mathematics/Time_Series_Analysis/Cointegration_Tests/engle_granger.py</div>
+</div>
+
+<div class="legend">
+  <div class="legend-item"><svg width="56" height="24"><polygon points="10,2 50,2 40,22 0,22" fill="#eff6ff" stroke="#2563eb" stroke-width="2"/><text x="25" y="15" text-anchor="middle" fill="#1e40af" font-size="8" font-family="Inter">I/O</text></svg><span>Parallelogram (Input/Output)</span></div>
+  <div class="legend-item"><svg width="50" height="22"><ellipse cx="25" cy="11" rx="23" ry="10" fill="#f0fdf4" stroke="#16a34a" stroke-width="2"/><text x="25" y="14.5" text-anchor="middle" fill="#166534" font-size="9" font-family="Inter">Oval</text></svg><span>Terminal (Start/End)</span></div>
+  <div class="legend-item"><svg width="52" height="22"><rect x="4" y="3" width="44" height="16" rx="4" fill="#ffffff" stroke="#64748b" stroke-width="2"/><text x="26" y="14.5" text-anchor="middle" fill="#334155" font-size="9" font-family="Inter">Rect</text></svg><span>Rectangle (Process)</span></div>
+  <div class="legend-item"><svg width="52" height="24"><polygon points="26,1 50,12 26,23 2,12" fill="#faf5ff" stroke="#9333ea" stroke-width="2"/><text x="26" y="15.5" text-anchor="middle" fill="#6b21a8" font-size="9" font-family="Inter">Diam</text></svg><span>Diamond (Decision)</span></div>
+  <div class="legend-item"><svg width="24" height="24"><circle cx="12" cy="12" r="10" fill="#f0fdf4" stroke="#22c55e" stroke-width="2"/><text x="12" y="15.5" text-anchor="middle" fill="#15803d" font-size="9" font-family="Inter" font-weight="600">A</text></svg><span>Circle (Connector)</span></div>
+  <div class="legend-item"><svg width="52" height="22"><rect x="4" y="3" width="44" height="16" rx="4" fill="#f0fdfa" stroke="#0d9488" stroke-width="2"/><text x="26" y="14.5" text-anchor="middle" fill="#0f766e" font-size="9" font-family="Inter">Sub</text></svg><span>Sub-process Call</span></div>
+  <div class="legend-item"><svg width="52" height="22"><rect x="4" y="3" width="44" height="16" rx="4" fill="#fef2f2" stroke="#dc2626" stroke-width="2"/><text x="26" y="14.5" text-anchor="middle" fill="#991b1b" font-size="9" font-family="Inter">Err</text></svg><span>Exception/Error</span></div>
+  <div class="legend-item"><svg width="56" height="24"><polygon points="10,2 50,2 40,22 0,22" fill="#fffbeb" stroke="#d97706" stroke-width="2"/><text x="25" y="15" text-anchor="middle" fill="#92400e" font-size="8" font-family="Inter">Out</text></svg><span>Return/Output</span></div>
+</div>
+
+<div class="chart-wrapper">
+<svg class="fc" width="1060" height="2740" viewBox="0 0 1060 2740">
+<defs>
+<marker id="ah" markerWidth="9" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0,9 3.5,0 7" fill="#475569"/></marker>
+<marker id="ahg" markerWidth="9" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0,9 3.5,0 7" fill="#16a34a"/></marker>
+<marker id="ahr" markerWidth="9" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0,9 3.5,0 7" fill="#dc2626"/></marker>
+</defs>
+
+<!-- SECTION 1: __init__
+
+<!-- START terminal -->
+<ellipse cx="530" cy="70" rx="148" ry="22" fill="#f0fdf4" stroke="#16a34a" stroke-width="2"/>
+<text x="530" y="75" text-anchor="middle" fill="#166534" font-size="13" font-weight="600">START: EngleGrangerTest( )</text>
+
+<!-- Arrow START → INPUT -->
+<line x1="530" y1="92" x2="530" y2="106" stroke="#475569" stroke-width="1.6" marker-end="url(#ah)"/>
+
+<!-- INPUT parallelogram (proper 4-point slanted shape) -->
+<polygon points="420,106 675,106 650,146 390,146" fill="#eff6ff" stroke="#2563eb" stroke-width="1.8"/>
+<text x="528" y="122" text-anchor="middle" fill="#1e40af" font-size="11">INPUT: y(Series), x(Series), max_lag,</text>
+<text x="528" y="136" text-anchor="middle" fill="#1e40af" font-size="10.5">regression_type, sig_level, verify_i1</text>
+
+<!-- Arrow INPUT → Validation -->
+<line x1="530" y1="146" x2="530" y2="162" stroke="#475569" stroke-width="1.6" marker-end="url(#ah)"/>
+
+<!-- PROC: Type & Value Validation -->
+<rect x="300" y="162" width="460" height="84" rx="6" fill="#ffffff" stroke="#64748b" stroke-width="1.8"/>
+<text x="530" y="182" text-anchor="middle" fill="#334155" font-size="12" font-weight="600">Type &amp; Value Validation Block</text>
+<text x="530" y="198" text-anchor="middle" fill="#475569" font-size="10.5">isinstance(y, Series/DataFrame)?  isinstance(x, Series/DataFrame)?</text>
+<text x="530" y="212" text-anchor="middle" fill="#475569" font-size="10.5">Both single-column?  len(combined) &gt;= 30?</text>
+<text x="530" y="226" text-anchor="middle" fill="#475569" font-size="10.5">regression_type in ('c','ct','n')?</text>
+<text x="530" y="240" text-anchor="middle" fill="#475569" font-size="10.5">0 &lt; sig_level &lt; 1?</text>
+
+<!-- Arrow Validation → DEC -->
+<line x1="530" y1="246" x2="530" y2="268" stroke="#475569" stroke-width="1.6" marker-end="url(#ah)"/>
+
+<!-- DEC: All validations pass? -->
+<polygon points="530,268 670,298 530,328 390,298" fill="#faf5ff" stroke="#9333ea" stroke-width="2"/>
+<text x="530" y="295" text-anchor="middle" fill="#6b21a8" font-size="11.5">All validations</text>
+<text x="530" y="311" text-anchor="middle" fill="#6b21a8" font-size="11.5">pass?</text>
+
+<!-- No → raise (inside page at x=800–1000) -->
+<line x1="670" y1="298" x2="790" y2="298" stroke="#dc2626" stroke-width="1.6" marker-end="url(#ahr)"/>
+<text x="730" y="291" text-anchor="middle" fill="#dc2626" font-size="10" font-weight="600">No</text>
+<rect x="790" y="272" width="230" height="52" rx="6" fill="#fef2f2" stroke="#dc2626" stroke-width="1.8"/>
+<text x="905" y="292" text-anchor="middle" fill="#991b1b" font-size="11" font-weight="600">raise TypeError / ValueError</text>
+<text x="905" y="306" text-anchor="middle" fill="#991b1b" font-size="10">or insufficient obs (&lt;30)</text>
+<text x="905" y="320" text-anchor="middle" fill="#991b1b" font-size="10">or invalid regression_type</text>
+
+<!-- Yes → Align & Store -->
+<line x1="530" y1="328" x2="530" y2="356" stroke="#16a34a" stroke-width="1.6" marker-end="url(#ahg)"/>
+<text x="542" y="346" text-anchor="middle" fill="#16a34a" font-size="10" font-weight="600">Yes</text>
+
+<!-- PROC: Align & Store Core Attributes -->
+<rect x="300" y="356" width="460" height="76" rx="6" fill="#ffffff" stroke="#64748b" stroke-width="1.8"/>
+<text x="530" y="376" text-anchor="middle" fill="#334155" font-size="12" font-weight="600">Align &amp; Store Core Attributes</text>
+<text x="530" y="392" text-anchor="middle" fill="#475569" font-size="10.5">combined = pd.concat([y, x], axis=1).dropna()</text>
+<text x="530" y="406" text-anchor="middle" fill="#475569" font-size="10.5">self.y = combined.iloc[:,0]   self.x = combined.iloc[:,1]</text>
+<text x="530" y="420" text-anchor="middle" fill="#475569" font-size="10.5">self.T = len(combined)   self.y_name, self.x_name</text>
+
+<line x1="530" y1="432" x2="530" y2="458" stroke="#475569" stroke-width="1.6" marker-end="url(#ah)"/>
+
+<!-- PROC: Store Parameters -->
+<rect x="330" y="458" width="400" height="60" rx="6" fill="#ffffff" stroke="#64748b" stroke-width="1.8"/>
+<text x="530" y="478" text-anchor="middle" fill="#334155" font-size="12" font-weight="600">Store Parameters</text>
+<text x="530" y="494" text-anchor="middle" fill="#475569" font-size="10.5">self.max_lag, self.regression_type</text>
+<text x="530" y="508" text-anchor="middle" fill="#475569" font-size="10.5">self.sig_level, self.verify_i1</text>
+
+<line x1="530" y1="518" x2="530" y2="544" stroke="#475569" stroke-width="1.6" marker-end="url(#ah)"/>
+
+<!-- PROC: Initialize Result Placeholders -->
+<rect x="300" y="544" width="460" height="76" rx="6" fill="#ffffff" stroke="#64748b" stroke-width="1.8"/>
+<text x="530" y="564" text-anchor="middle" fill="#334155" font-size="12" font-weight="600">Initialize Result Placeholders</text>
+<text x="530" y="580" text-anchor="middle" fill="#475569" font-size="10.5">self.alpha = None   self.beta = None</text>
+<text x="530" y="594" text-anchor="middle" fill="#475569" font-size="10.5">self.residuals = None   self.adf_result = None</text>
+<text x="530" y="608" text-anchor="middle" fill="#475569" font-size="10.5">self.is_cointegrated = None   self._ols_result = None</text>
+
+<line x1="530" y1="620" x2="530" y2="646" stroke="#475569" stroke-width="1.6" marker-end="url(#ah)"/>
+
+<!-- Connector A -->
+<circle cx="530" cy="662" r="16" fill="#f0fdf4" stroke="#22c55e" stroke-width="2"/>
+<text x="530" y="666" text-anchor="middle" fill="#15803d" font-size="11" font-weight="600">A</text>
+
+<line x1="530" y1="678" x2="530" y2="718" stroke="#475569" stroke-width="1.6" marker-end="url(#ah)"/>
+
+<!-- ================================================================ -->
+<!-- SECTION 2: run()                                                 -->
+<!-- ================================================================ -->
+
+<!-- DEC: verify_i1 == True? -->
+<polygon points="530,718 680,748 530,778 380,748" fill="#faf5ff" stroke="#9333ea" stroke-width="2"/>
+<text x="530" y="745" text-anchor="middle" fill="#6b21a8" font-size="11.5">verify_i1</text>
+<text x="530" y="761" text-anchor="middle" fill="#6b21a8" font-size="11.5">== True?</text>
+
+<!-- Yes → _verify_integration_order -->
+<line x1="380" y1="748" x2="232" y2="748" stroke="#16a34a" stroke-width="1.6" marker-end="url(#ahg)"/>
+<text x="306" y="742" text-anchor="middle" fill="#16a34a" font-size="10" font-weight="600">Yes</text>
+
+<rect x="58" y="724" width="174" height="52" rx="6" fill="#f0fdfa" stroke="#0d9488" stroke-width="1.8"/>
+<text x="145" y="744" text-anchor="middle" fill="#0f766e" font-size="11" font-weight="600">_verify_integration</text>
+<text x="145" y="758" text-anchor="middle" fill="#0f766e" font-size="10.5">_order()</text>
+<text x="145" y="770" text-anchor="middle" fill="#0f766e" font-size="10">for each (y, x) series</text>
+
+<line x1="145" y1="776" x2="145" y2="802" stroke="#475569" stroke-width="1.6" marker-end="url(#ah)"/>
+
+<!-- SUB: StationarityTest -->
+<rect x="63" y="802" width="162" height="44" rx="6" fill="#f0fdfa" stroke="#0d9488" stroke-width="1.8"/>
+<text x="144" y="820" text-anchor="middle" fill="#0f766e" font-size="10.5" font-weight="600">StationarityTest(series)</text>
+<text x="144" y="834" text-anchor="middle" fill="#0f766e" font-size="10">ADF + KPSS test</text>
+
+<line x1="144" y1="846" x2="144" y2="872" stroke="#475569" stroke-width="1.6" marker-end="url(#ah)"/>
+
+<!-- DEC: is_stationary == True? -->
+<polygon points="144,872 241,894 144,916 47,894" fill="#faf5ff" stroke="#9333ea" stroke-width="2"/>
+<text x="144" y="890" text-anchor="middle" fill="#6b21a8" font-size="10">is_stationary</text>
+<text x="144" y="904" text-anchor="middle" fill="#6b21a8" font-size="10">== True?</text>
+
+<!-- Yes → warnings.warn -->
+<line x1="241" y1="894" x2="320" y2="894" stroke="#dc2626" stroke-width="1.6" marker-end="url(#ahr)"/>
+<text x="280" y="887" text-anchor="middle" fill="#dc2626" font-size="9.5" font-weight="600">Yes</text>
+<rect x="320" y="876" width="130" height="36" rx="6" fill="#fef2f2" stroke="#dc2626" stroke-width="1.8"/>
+<text x="385" y="894" text-anchor="middle" fill="#991b1b" font-size="10" font-weight="600">warnings.warn</text>
+<text x="385" y="908" text-anchor="middle" fill="#991b1b" font-size="9.5">(UserWarning)</text>
+
+<!-- No → print confirmed -->
+<line x1="144" y1="916" x2="144" y2="942" stroke="#16a34a" stroke-width="1.6" marker-end="url(#ahg)"/>
+<text x="156" y="933" text-anchor="middle" fill="#16a34a" font-size="9.5" font-weight="600">No</text>
+<rect x="63" y="942" width="162" height="28" rx="6" fill="#ffffff" stroke="#64748b" stroke-width="1.8"/>
+<text x="144" y="960" text-anchor="middle" fill="#334155" font-size="10">print("confirmed I(1)")</text>
+
+<!-- Loop arrow: right of warnings.warn → right side of StationarityTest -->
+<path d="M 450 894 L 476 894 L 476 822 L 225 822" stroke="#475569" stroke-width="1.3" fill="none" stroke-dasharray="5,3" marker-end="url(#ah)"/>
+<text x="484" y="858" fill="#475569" font-size="9.5">next series</text>
+
+<!-- Merge stationarity-done path to center x=530 -->
+<path d="M 144 970 L 144 1008 L 530 1008" stroke="#475569" stroke-width="1.6" fill="none"/>
+
+<!-- No branch (skip verify) → center x=530 -->
+<line x1="680" y1="748" x2="800" y2="748" stroke="#dc2626" stroke-width="1.6" marker-end="url(#ahr)"/>
+<text x="740" y="742" text-anchor="middle" fill="#dc2626" font-size="10" font-weight="600">No</text>
+<path d="M 800 748 L 860 748 L 860 1008 L 530 1008" stroke="#475569" stroke-width="1.6" fill="none"/>
+
+<!-- Single arrow from merge → OLS -->
+<line x1="530" y1="1008" x2="530" y2="1038" stroke="#475569" stroke-width="1.6" marker-end="url(#ah)"/>
+
+<!-- SUB: _run_ols() — STEP 1 -->
+<rect x="290" y="1038" width="480" height="66" rx="6" fill="#f0fdfa" stroke="#0d9488" stroke-width="1.8"/>
+<text x="530" y="1058" text-anchor="middle" fill="#0f766e" font-size="12" font-weight="600">Call _run_ols()  — STEP 1: OLS Regression</text>
+<text x="530" y="1074" text-anchor="middle" fill="#0f766e" font-size="10.5">X_const = add_constant(x.values)</text>
+<text x="530" y="1088" text-anchor="middle" fill="#0f766e" font-size="10.5">OLS(y, X_const).fit()  →  self.alpha (intercept), self.beta (hedge ratio β)</text>
+
+<line x1="530" y1="1104" x2="530" y2="1130" stroke="#475569" stroke-width="1.6" marker-end="url(#ah)"/>
+
+<!-- PROC: Compute Residuals -->
+<rect x="300" y="1130" width="460" height="44" rx="6" fill="#ffffff" stroke="#64748b" stroke-width="1.8"/>
+<text x="530" y="1150" text-anchor="middle" fill="#334155" font-size="12" font-weight="600">Compute Residuals</text>
+<text x="530" y="1164" text-anchor="middle" fill="#475569" font-size="10.5">self.residuals = pd.Series(ols.resid)  ←  spread ε_t = Y − α − β·X</text>
+
+<line x1="530" y1="1174" x2="530" y2="1200" stroke="#475569" stroke-width="1.6" marker-end="url(#ah)"/>
+
+<!-- SUB: _run_adf_on_residuals() — STEP 2 -->
+<rect x="270" y="1200" width="520" height="66" rx="6" fill="#f0fdfa" stroke="#0d9488" stroke-width="1.8"/>
+<text x="530" y="1220" text-anchor="middle" fill="#0f766e" font-size="12" font-weight="600">Call _run_adf_on_residuals()  — STEP 2</text>
+<text x="530" y="1236" text-anchor="middle" fill="#0f766e" font-size="10.5">adfuller(self.residuals, maxlag=max_lag, autolag='AIC')</text>
+<text x="530" y="1250" text-anchor="middle" fill="#0f766e" font-size="10">Uses MacKinnon (2010) response-surface critical values (not standard ADF)</text>
+
+<line x1="530" y1="1266" x2="530" y2="1292" stroke="#475569" stroke-width="1.6" marker-end="url(#ah)"/>
+
+<!-- DEC: p_value < sig_level? -->
+<polygon points="530,1292 710,1324 530,1356 350,1324" fill="#faf5ff" stroke="#9333ea" stroke-width="2"/>
+<text x="530" y="1320" text-anchor="middle" fill="#6b21a8" font-size="11.5">p_value &lt; sig_level?</text>
+<text x="530" y="1336" text-anchor="middle" fill="#6b21a8" font-size="10">(ADF rejects unit root in residuals)</text>
+
+<!-- Yes → is_cointegrated = True -->
+<line x1="350" y1="1324" x2="212" y2="1324" stroke="#16a34a" stroke-width="1.6" marker-end="url(#ahg)"/>
+<text x="281" y="1318" text-anchor="middle" fill="#16a34a" font-size="10" font-weight="600">Yes</text>
+<rect x="44" y="1306" width="168" height="36" rx="6" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.8"/>
+<text x="128" y="1324" text-anchor="middle" fill="#166534" font-size="11" font-weight="600">is_cointegrated = True</text>
+<text x="128" y="1338" text-anchor="middle" fill="#166534" font-size="10">(residuals are I(0))</text>
+<!-- Left merge path fully extends to x=530 -->
+<path d="M 128 1342 L 128 1388 L 530 1388" stroke="#475569" stroke-width="1.6" fill="none"/>
+
+<!-- No → is_cointegrated = False -->
+<line x1="710" y1="1324" x2="830" y2="1324" stroke="#dc2626" stroke-width="1.6" marker-end="url(#ahr)"/>
+<text x="770" y="1318" text-anchor="middle" fill="#dc2626" font-size="10" font-weight="600">No</text>
+<rect x="830" y="1306" width="172" height="36" rx="6" fill="#fef2f2" stroke="#dc2626" stroke-width="1.8"/>
+<text x="916" y="1324" text-anchor="middle" fill="#991b1b" font-size="11" font-weight="600">is_cointegrated = False</text>
+<text x="916" y="1338" text-anchor="middle" fill="#991b1b" font-size="10">(residuals still I(1))</text>
+<!-- Right merge path fully extends to x=530 -->
+<path d="M 916 1342 L 916 1388 L 530 1388" stroke="#475569" stroke-width="1.6" fill="none"/>
+
+<!-- Single arrow from merge → RETURN -->
+<line x1="530" y1="1388" x2="530" y2="1414" stroke="#475569" stroke-width="1.6" marker-end="url(#ah)"/>
+
+<!-- OUTPUT: RETURN dict (proper parallelogram) -->
+<polygon points="405,1414 675,1414 645,1456 375,1456" fill="#fffbeb" stroke="#d97706" stroke-width="1.8"/>
+<text x="530" y="1432" text-anchor="middle" fill="#92400e" font-size="11" font-weight="600">RETURN dict: {alpha, beta, residuals, adf_result,</text>
+<text x="530" y="1446" text-anchor="middle" fill="#92400e" font-size="10.5" font-weight="600">is_cointegrated, spread_mean, spread_std}</text>
+
+<line x1="530" y1="1456" x2="530" y2="1484" stroke="#475569" stroke-width="1.6" marker-end="url(#ah)"/>
+
+<!-- Connector B -->
+<circle cx="530" cy="1500" r="16" fill="#f0fdf4" stroke="#22c55e" stroke-width="2"/>
+<text x="530" y="1504" text-anchor="middle" fill="#15803d" font-size="11" font-weight="600">B</text>
+
+<!-- ================================================================ -->
+<!-- SECTION 3: utility methods                                       -->
+<!-- ================================================================ -->
+<line x1="530" y1="1516" x2="530" y2="1564" stroke="#475569" stroke-width="1.6" marker-end="url(#ah)"/>
+
+<!-- summary() -->
+<rect x="44" y="1574" width="210" height="130" rx="6" fill="#ffffff" stroke="#64748b" stroke-width="1.8"/>
+<text x="149" y="1596" text-anchor="middle" fill="#334155" font-size="12" font-weight="600">summary()</text>
+<text x="149" y="1614" text-anchor="middle" fill="#475569" font-size="10">_require_fitted check</text>
+<text x="149" y="1630" text-anchor="middle" fill="#475569" font-size="10">Print: Y/X names, T,</text>
+<text x="149" y="1644" text-anchor="middle" fill="#475569" font-size="10">sig_level, α, β</text>
+<text x="149" y="1658" text-anchor="middle" fill="#475569" font-size="10">ADF stat, p-value,</text>
+<text x="149" y="1672" text-anchor="middle" fill="#475569" font-size="10">critical values, lags</text>
+<text x="149" y="1686" text-anchor="middle" fill="#475569" font-size="10">DECISION: ✅/❌</text>
+
+<!-- plot() -->
+<rect x="278" y="1574" width="210" height="130" rx="6" fill="#ffffff" stroke="#64748b" stroke-width="1.8"/>
+<text x="383" y="1596" text-anchor="middle" fill="#334155" font-size="12" font-weight="600">plot()</text>
+<text x="383" y="1614" text-anchor="middle" fill="#475569" font-size="10">_require_fitted check</text>
+<text x="383" y="1630" text-anchor="middle" fill="#475569" font-size="10">3-panel matplotlib:</text>
+<text x="383" y="1644" text-anchor="middle" fill="#475569" font-size="10">ax1: norm. prices</text>
+<text x="383" y="1658" text-anchor="middle" fill="#475569" font-size="10">ax2: spread ±2σ bands</text>
+<text x="383" y="1672" text-anchor="middle" fill="#475569" font-size="10">ax3: spread histogram</text>
+<text x="383" y="1686" text-anchor="middle" fill="#475569" font-size="10">+ normal overlay</text>
+
+<!-- get_spread() -->
+<rect x="512" y="1574" width="210" height="130" rx="6" fill="#ffffff" stroke="#64748b" stroke-width="1.8"/>
+<text x="617" y="1596" text-anchor="middle" fill="#334155" font-size="12" font-weight="600">get_spread()</text>
+<text x="617" y="1614" text-anchor="middle" fill="#475569" font-size="10">_require_fitted check</text>
+<text x="617" y="1630" text-anchor="middle" fill="#475569" font-size="10">return self.residuals</text>
+<text x="617" y="1646" text-anchor="middle" fill="#475569" font-size="10">(spread ε_t as Series)</text>
+<text x="617" y="1662" text-anchor="middle" fill="#475569" font-size="10">Used as Z-score input</text>
+<text x="617" y="1676" text-anchor="middle" fill="#475569" font-size="10">for Kalman Filter</text>
+
+<!-- get_hedge_ratio() -->
+<rect x="746" y="1574" width="210" height="130" rx="6" fill="#ffffff" stroke="#64748b" stroke-width="1.8"/>
+<text x="851" y="1596" text-anchor="middle" fill="#334155" font-size="12" font-weight="600">get_hedge_ratio()</text>
+<text x="851" y="1614" text-anchor="middle" fill="#475569" font-size="10">_require_fitted check</text>
+<text x="851" y="1630" text-anchor="middle" fill="#475569" font-size="10">return self.beta</text>
+<text x="851" y="1646" text-anchor="middle" fill="#475569" font-size="10">(OLS slope β)</text>
+<text x="851" y="1662" text-anchor="middle" fill="#475569" font-size="10">Used as static hedge</text>
+<text x="851" y="1676" text-anchor="middle" fill="#475569" font-size="10">ratio before Kalman</text>
+
+<!-- Connector B below -->
+<circle cx="530" cy="1744" r="14" fill="#f0fdf4" stroke="#22c55e" stroke-width="2"/>
+<text x="530" y="1748" text-anchor="middle" fill="#15803d" font-size="10" font-weight="600">B</text>
+
+<!-- ================================================================ -->
+<!-- SECTION 4: __main__                                              -->
+<!-- ================================================================ -->
+<line x1="530" y1="1758" x2="530" y2="1790" stroke="#475569" stroke-width="1.6" marker-end="url(#ah)"/>
+
+<polygon points="530,1790 700,1822 530,1854 360,1822" fill="#faf5ff" stroke="#9333ea" stroke-width="2"/>
+<text x="530" y="1819" text-anchor="middle" fill="#6b21a8" font-size="11.5">__name__ ==</text>
+<text x="530" y="1835" text-anchor="middle" fill="#6b21a8" font-size="11.5">"__main__"?</text>
+
+<!-- No → module imported -->
+<line x1="700" y1="1822" x2="820" y2="1822" stroke="#dc2626" stroke-width="1.6" marker-end="url(#ahr)"/>
+<text x="760" y="1816" text-anchor="middle" fill="#dc2626" font-size="10" font-weight="600">No</text>
+<rect x="820" y="1804" width="180" height="36" rx="6" fill="#ffffff" stroke="#64748b" stroke-width="1.8"/>
+<text x="910" y="1822" text-anchor="middle" fill="#334155" font-size="11" font-weight="600">Module available</text>
+<text x="910" y="1836" text-anchor="middle" fill="#475569" font-size="10">for external imports</text>
+
+<!-- Yes → demo -->
+<line x1="530" y1="1854" x2="530" y2="1882" stroke="#16a34a" stroke-width="1.6" marker-end="url(#ahg)"/>
+<text x="542" y="1872" text-anchor="middle" fill="#16a34a" font-size="10" font-weight="600">Yes</text>
+
+<!-- IO: yf.download (proper parallelogram) -->
+<polygon points="420,1882 675,1882 645,1922 390,1922" fill="#eff6ff" stroke="#2563eb" stroke-width="1.8"/>
+<text x="527" y="1900" text-anchor="middle" fill="#1e40af" font-size="11">yf.download([RELIANCE.NS, TCS.NS]</text>
+<text x="527" y="1914" text-anchor="middle" fill="#1e40af" font-size="10.5">period='5y', auto_adjust=True)["Close"]</text>
+
+<line x1="530" y1="1922" x2="530" y2="1948" stroke="#475569" stroke-width="1.6" marker-end="url(#ah)"/>
+
+<!-- PROC: log transform -->
+<rect x="370" y="1948" width="320" height="28" rx="6" fill="#ffffff" stroke="#64748b" stroke-width="1.8"/>
+<text x="530" y="1966" text-anchor="middle" fill="#334155" font-size="11.5" font-weight="600">log_prices = np.log(raw)</text>
+
+<line x1="530" y1="1976" x2="530" y2="2002" stroke="#475569" stroke-width="1.6" marker-end="url(#ah)"/>
+
+<!-- SUB: EngleGrangerTest(...) -->
+<rect x="290" y="2002" width="480" height="54" rx="6" fill="#f0fdfa" stroke="#0d9488" stroke-width="1.8"/>
+<text x="530" y="2022" text-anchor="middle" fill="#0f766e" font-size="11.5" font-weight="600">eg = EngleGrangerTest(y=log["RELIANCE.NS"],</text>
+<text x="530" y="2038" text-anchor="middle" fill="#0f766e" font-size="10.5">x=log["TCS.NS"], sig_level=0.05, verify_i1=True)</text>
+<text x="530" y="2050" text-anchor="middle" fill="#0f766e" font-size="10">Triggers full __init__ flow (§1 above)</text>
+
+<line x1="530" y1="2056" x2="530" y2="2082" stroke="#475569" stroke-width="1.6" marker-end="url(#ah)"/>
+
+<!-- SUB: eg.run() -->
+<rect x="370" y="2082" width="320" height="38" rx="6" fill="#f0fdfa" stroke="#0d9488" stroke-width="1.8"/>
+<text x="530" y="2102" text-anchor="middle" fill="#0f766e" font-size="11.5" font-weight="600">results = eg.run()</text>
+<text x="530" y="2114" text-anchor="middle" fill="#0f766e" font-size="10">Triggers full run() flow (§2 above)</text>
+
+<line x1="530" y1="2120" x2="530" y2="2148" stroke="#475569" stroke-width="1.6" marker-end="url(#ah)"/>
+
+<!-- IO: eg.summary() + eg.plot() (proper parallelogram) -->
+<polygon points="420,2148 650,2148 620,2188 390,2188" fill="#eff6ff" stroke="#2563eb" stroke-width="1.8"/>
+<text x="527" y="2166" text-anchor="middle" fill="#1e40af" font-size="11">eg.summary()  →  print tables to stdout</text>
+<text x="527" y="2180" text-anchor="middle" fill="#1e40af" font-size="10.5">eg.plot()  →  3-panel matplotlib chart</text>
+
+<line x1="530" y1="2188" x2="530" y2="2216" stroke="#475569" stroke-width="1.6" marker-end="url(#ah)"/>
+
+<!-- DEC: results["is_cointegrated"]? -->
+<polygon points="530,2216 700,2248 530,2280 360,2248" fill="#faf5ff" stroke="#9333ea" stroke-width="2"/>
+<text x="530" y="2245" text-anchor="middle" fill="#6b21a8" font-size="11">results["is_cointegrated"]</text>
+<text x="530" y="2261" text-anchor="middle" fill="#6b21a8" font-size="11">== True?</text>
+
+<!-- Yes → get_spread -->
+<line x1="360" y1="2248" x2="224" y2="2248" stroke="#16a34a" stroke-width="1.6" marker-end="url(#ahg)"/>
+<text x="292" y="2242" text-anchor="middle" fill="#16a34a" font-size="10" font-weight="600">Yes</text>
+<rect x="52" y="2230" width="172" height="36" rx="6" fill="#f0fdfa" stroke="#0d9488" stroke-width="1.8"/>
+<text x="138" y="2248" text-anchor="middle" fill="#0f766e" font-size="11" font-weight="600">spread = eg.get_spread()</text>
+<text x="138" y="2262" text-anchor="middle" fill="#0f766e" font-size="10">print spread.shape</text>
+<path d="M 138 2266 L 138 2318 L 530 2318" stroke="#475569" stroke-width="1.6" fill="none"/>
+
+<!-- No → skip -->
+<line x1="700" y1="2248" x2="826" y2="2248" stroke="#dc2626" stroke-width="1.6" marker-end="url(#ahr)"/>
+<text x="763" y="2242" text-anchor="middle" fill="#dc2626" font-size="10" font-weight="600">No</text>
+<rect x="826" y="2230" width="172" height="36" rx="6" fill="#ffffff" stroke="#64748b" stroke-width="1.8"/>
+<text x="912" y="2248" text-anchor="middle" fill="#334155" font-size="11">Skip spread usage</text>
+<text x="912" y="2262" text-anchor="middle" fill="#475569" font-size="10">(not cointegrated)</text>
+<path d="M 912 2266 L 912 2318 L 530 2318" stroke="#475569" stroke-width="1.6" fill="none"/>
+
+<line x1="530" y1="2318" x2="530" y2="2352" stroke="#475569" stroke-width="1.6" marker-end="url(#ah)"/>
+
+<!-- OUTPUT: final (proper parallelogram) -->
+<polygon points="415,2352 675,2352 645,2392 385,2392" fill="#fffbeb" stroke="#d97706" stroke-width="1.8"/>
+<text x="530" y="2370" text-anchor="middle" fill="#92400e" font-size="11" font-weight="600">OUTPUT: α, β, spread ε_t, ADF stats,</text>
+<text x="530" y="2384" text-anchor="middle" fill="#92400e" font-size="10.5" font-weight="600">is_cointegrated, spread_mean, spread_std</text>
+
+<line x1="530" y1="2392" x2="530" y2="2424" stroke="#475569" stroke-width="1.6" marker-end="url(#ah)"/>
+
+<!-- END terminal -->
+<ellipse cx="530" cy="2446" rx="130" ry="22" fill="#f0fdf4" stroke="#16a34a" stroke-width="2"/>
+<text x="530" y="2451" text-anchor="middle" fill="#166534" font-size="13" font-weight="600">END</text>
+
+<!-- MATH REFERENCE BOX -->
+<rect x="46" y="2496" width="968" height="192" rx="10" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.5"/>
+<text x="530" y="2518" text-anchor="middle" fill="#3b82f6" font-size="12" font-weight="600">KEY MATHEMATICS (Engle_Granger_Test.tex)</text>
+<text x="66" y="2540" class="lbl-math">STEP 1 — OLS Regression:   Y_t = alpha + beta * X_t + eps_t    (estimate alpha, beta by OLS)</text>
+<text x="66" y="2558" class="lbl-math">STEP 2 — ADF on Residuals: H0: eps_t ~ I(1) [NOT cointegrated]  vs  H1: eps_t ~ I(0) [COINTEGRATED]</text>
+<text x="66" y="2576" class="lbl-math">ADF statistic:  tau = (rho_hat - 1) / se(rho_hat)    compared to MacKinnon (2010) critical values</text>
+<text x="66" y="2594" class="lbl-math">Critical values from MacKinnon response surface (NOT standard ADF), since residuals are estimated</text>
+<text x="66" y="2612" class="lbl-math">Decision rule: reject H0 (unit root in eps) iff p-value &lt; sig_level  →  residuals I(0)  →  cointegrated</text>
+<text x="66" y="2630" class="lbl-math">Pipeline: StationarityTest --> EngleGrangerTest --> RollingCointegration --> Kalman Filter</text>
+<text x="66" y="2648" class="lbl-math">Use: PAIRS TRADING (exactly 2 assets)  |  For 3+ assets: use johansen.py</text>
+
+</svg>
+</div>
+<div class="footer">Dark Wing &mdash; Financial Mathematics Division &nbsp;|&nbsp; engle_granger.py Code Flowchart &nbsp;|&nbsp; 2026</div>
+</body>
+</html>

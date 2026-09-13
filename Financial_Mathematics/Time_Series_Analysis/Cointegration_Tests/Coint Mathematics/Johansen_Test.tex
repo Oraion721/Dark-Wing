@@ -1,0 +1,359 @@
+\documentclass[12pt, a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{geometry}
+\usepackage[hidelinks]{hyperref}
+\usepackage{booktabs}
+\usepackage{xcolor}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\geometry{margin=2.5cm}
+
+\pagestyle{fancy}
+\setlength{\headheight}{14pt}
+\fancyhf{}
+\rhead{Dark Wing -- Financial Mathematics}
+\lhead{Johansen Cointegration Test}
+\rfoot{Page \thepage}
+
+\definecolor{darkblue}{RGB}{0,51,102}
+\definecolor{mathgray}{RGB}{245,245,245}
+
+\title{
+    \Huge\textbf{\textcolor{darkblue}{Johansen Cointegration Test}} \\[0.5em]
+    \Large Mathematical Notes \& Journal \\[0.5em]
+    \large \texttt{johansen.py} — Dark Wing Project
+}
+\author{Dark Wing — Financial Mathematics Division}
+\date{\today}
+
+\begin{document}
+\maketitle
+\tableofcontents
+\newpage
+
+% =============================================================================
+\section{Why Do We Need the Johansen Test?}
+% =============================================================================
+
+Consider two stock prices, say \textbf{Reliance} and \textbf{TCS}. 
+Each of them individually wanders randomly over time — they are \emph{non-stationary}. 
+But what if there exists a magical \emph{combination} of the two that does NOT wander?
+That combination is called a \textbf{cointegrating relationship}.
+
+\medskip
+The \textbf{Johansen test} answers: ``Does such a long-run equilibrium exist, and if so, 
+how many independent equilibrium relationships are there?''
+
+\medskip
+\textbf{Advantage over Engle-Granger:} Johansen handles $m \geq 2$ series simultaneously 
+and can find multiple cointegrating vectors using a maximum likelihood framework.
+
+% =============================================================================
+\section{Prerequisites: The I(1) Condition}
+% =============================================================================
+
+\subsection{Definition: Integrated of Order 1 — I(1)}
+
+A time series $X_t$ is said to be \textbf{integrated of order 1}, written $X_t \sim I(1)$, if:
+\begin{itemize}
+    \item $X_t$ itself is \emph{non-stationary} (it has a unit root, it wanders).
+    \item Its \emph{first difference} $\Delta X_t = X_t - X_{t-1}$ is \emph{stationary} ($I(0)$).
+\end{itemize}
+
+\textbf{Example:} Log prices of stocks are typically $I(1)$. Daily returns (log differences) are $I(0)$.
+
+\medskip
+\textbf{Why it matters:} The Johansen test is designed for $I(1)$ variables only. 
+If you feed it $I(0)$ or $I(2)$ variables, the critical values are wrong and the results are meaningless.
+
+This is verified in \texttt{johansen.py} using the \texttt{StationarityTest} class before running the test.
+
+% =============================================================================
+\section{The VAR Foundation}
+% =============================================================================
+
+\subsection{The Vector Autoregression (VAR) Model}
+
+The Johansen test is derived from a $p$-th order \textbf{Vector Autoregression}:
+
+\begin{equation}
+    X_t = \mu + A_1 X_{t-1} + A_2 X_{t-2} + \cdots + A_p X_{t-p} + \varepsilon_t
+    \label{eq:var}
+\end{equation}
+
+where:
+\begin{itemize}
+    \item $X_t$ is an $m \times 1$ vector of $m$ time series at time $t$.
+    \item $\mu$ is an $m \times 1$ vector of constants (intercepts).
+    \item $A_i$ are $m \times m$ coefficient matrices (how past values predict today's values).
+    \item $\varepsilon_t \sim \mathcal{N}(0, \Sigma)$ is a vector of white noise errors.
+    \item $p$ = the VAR lag order (selected by \texttt{VAROptimalLagSelect} in \texttt{Optimal\_lag\_selection.py}).
+\end{itemize}
+
+\subsection{The VECM Reparameterisation}
+
+We can algebraically rewrite the VAR (\ref{eq:var}) into its \textbf{Vector Error Correction} form:
+
+\begin{equation}
+    \boxed{
+    \Delta X_t = \mu + \Pi X_{t-1} + \Gamma_1 \Delta X_{t-1} + \Gamma_2 \Delta X_{t-2} + 
+    \cdots + \Gamma_{p-1} \Delta X_{t-p+1} + \varepsilon_t
+    }
+    \label{eq:vecm}
+\end{equation}
+
+where:
+\begin{itemize}
+    \item $\Delta X_t = X_t - X_{t-1}$ are the first differences.
+    \item $\Pi = \sum_{i=1}^{p} A_i - I_m$ is the \textbf{long-run impact matrix} (size $m \times m$).
+    \item $\Gamma_j = -\sum_{i=j+1}^{p} A_i$ are short-run adjustment matrices.
+\end{itemize}
+
+The \textbf{entire Johansen test revolves around the matrix $\Pi$}. Specifically, its rank.
+
+% =============================================================================
+\section{The Core Idea: Rank of $\Pi$}
+% =============================================================================
+
+The rank of $\Pi$ (denoted $r$) tells us exactly how many long-run equilibrium relationships exist:
+
+\begin{center}
+\begin{tabular}{@{}clll@{}}
+\toprule
+\textbf{Rank $r$} & \textbf{Meaning} & \textbf{Action} \\
+\midrule
+$r = 0$      & No cointegration. $\Pi = 0$. & Use VAR in differences. \\
+$0 < r < m$  & $r$ cointegrating vectors exist. & Fit VECM with rank $r$. \\
+$r = m$      & All series are stationary $I(0)$. & Use VAR in levels. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{The Factorisation of $\Pi$}
+
+When $0 < r < m$, the matrix $\Pi$ has a special factorisation:
+
+\begin{equation}
+    \boxed{ \Pi = \alpha \beta^\top }
+    \label{eq:factor}
+\end{equation}
+
+\begin{itemize}
+    \item $\beta$ is an $m \times r$ matrix. Each column is a \textbf{cointegrating vector} — the recipe 
+          for combining the $m$ series into a stationary spread.
+    \item $\alpha$ is an $m \times r$ matrix. Each column contains \textbf{adjustment speeds} — 
+          how fast each series corrects back to equilibrium.
+\end{itemize}
+
+\textbf{Example for 2 series (Reliance \& TCS):}
+\[
+\beta = \begin{pmatrix} 1 \\ -\beta_{12} \end{pmatrix}, \quad
+\text{so the spread is: } S_t = P^{REL}_t - \beta_{12} \cdot P^{TCS}_t
+\]
+
+% =============================================================================
+\section{Johansen's MLE Estimation}
+% =============================================================================
+
+\subsection{Reduced Rank Regression}
+
+Johansen estimates $\Pi = \alpha\beta^\top$ using \textbf{Reduced Rank Regression (RRR)}, 
+which is equivalent to solving a generalised eigenvalue problem.
+
+\textbf{Step 1 — Auxiliary Regressions:}
+
+Regress $\Delta X_t$ and $X_{t-1}$ on the lagged differences $\{\Delta X_{t-1}, \ldots, \Delta X_{t-p+1}\}$:
+\begin{align}
+    R_{0t} &= \Delta X_t - \hat{B}_0 Z_t \\
+    R_{1t} &= X_{t-1} - \hat{B}_1 Z_t
+\end{align}
+where $Z_t = (\Delta X_{t-1}^\top, \ldots, \Delta X_{t-p+1}^\top)^\top$ is the vector of short-run regressors.
+
+\textbf{Step 2 — Moment Matrices:}
+
+\begin{align}
+    S_{00} &= \frac{1}{T} \sum_{t=1}^T R_{0t} R_{0t}^\top \quad \text{(variance of } \Delta X_t \text{ residuals)} \\
+    S_{11} &= \frac{1}{T} \sum_{t=1}^T R_{1t} R_{1t}^\top \quad \text{(variance of } X_{t-1} \text{ residuals)} \\
+    S_{01} &= \frac{1}{T} \sum_{t=1}^T R_{0t} R_{1t}^\top \quad \text{(cross-moment)}
+\end{align}
+
+\textbf{Step 3 — Generalised Eigenvalue Problem:}
+
+Solve:
+\begin{equation}
+    \boxed{ \left| \lambda S_{11} - S_{10} S_{00}^{-1} S_{01} \right| = 0 }
+    \label{eq:eigproblem}
+\end{equation}
+
+This yields $m$ eigenvalues $\hat{\lambda}_1 > \hat{\lambda}_2 > \cdots > \hat{\lambda}_m \geq 0$ 
+and corresponding eigenvectors $\hat{v}_1, \hat{v}_2, \ldots, \hat{v}_m$.
+
+The \textbf{eigenvectors ARE the cointegrating vectors $\beta$}: the first $r$ eigenvectors 
+(those with largest eigenvalues) form the cointegrating space.
+
+\textbf{In code:} \texttt{statsmodels.coint\_johansen()} solves this exactly and returns the 
+eigenvalues in \texttt{result.eig} and eigenvectors in \texttt{result.evec}.
+
+% =============================================================================
+\section{The Two Test Statistics}
+% =============================================================================
+
+\subsection{Trace Statistic}
+
+Tests $H_0$: rank $\leq r$ against $H_1$: rank $> r$, for $r = 0, 1, \ldots, m-1$:
+
+\begin{equation}
+    \boxed{ \lambda_{\text{trace}}(r) = -T \sum_{i=r+1}^{m} \ln(1 - \hat{\lambda}_i) }
+    \label{eq:trace}
+\end{equation}
+
+\textbf{Interpretation:} If eigenvalues $\hat{\lambda}_{r+1}, \ldots, \hat{\lambda}_m$ are all very 
+small (close to 0), then $\ln(1-\hat{\lambda}_i) \approx 0$, so the trace stat is small. 
+We fail to reject $H_0$ and conclude rank $= r$.
+
+\textbf{Sequential procedure in code:}
+\begin{enumerate}
+    \item Test $r = 0$: Is $\lambda_{\text{trace}}(0) >$ critical value? If Yes, reject, move to $r=1$.
+    \item Test $r = 1$: Is $\lambda_{\text{trace}}(1) >$ critical value? If No, STOP. Rank $= 1$.
+    \item Continue until the first failure to reject. That $r$ is the rank.
+\end{enumerate}
+
+\subsection{Maximum Eigenvalue Statistic}
+
+Tests $H_0$: rank $= r$ against $H_1$: rank $= r+1$:
+
+\begin{equation}
+    \boxed{ \lambda_{\max}(r, r+1) = -T \ln(1 - \hat{\lambda}_{r+1}) }
+    \label{eq:maxeig}
+\end{equation}
+
+This tests \emph{one additional} cointegrating vector at a time. It is more specific than the trace test.
+Both tests should agree. If they disagree, the trace test is generally considered more robust.
+
+\subsection{Critical Values}
+
+Critical values depend on:
+\begin{itemize}
+    \item $m - r$ (the number of series tested under the null).
+    \item The deterministic specification (\texttt{det\_order}).
+    \item The chosen significance level (1\%, 5\%, or 10\%).
+\end{itemize}
+
+Critical values are non-standard (cannot use the normal $\chi^2$ table) because the test 
+statistics involve Brownian motion functionals. Osterwald-Lenum (1992) tables are used.
+\texttt{statsmodels} provides these in \texttt{result.cvt} (trace) and \texttt{result.cvm} (max-eig).
+
+% =============================================================================
+\section{Deterministic Terms (\texttt{det\_order})}
+% =============================================================================
+
+\begin{center}
+\begin{tabular}{@{}cll@{}}
+\toprule
+\texttt{det\_order} & Meaning & When to use \\
+\midrule
+$-1$ & No intercept, no trend & Prices centred at 0 (rare) \\
+$0$  & Restricted constant (intercept in CE only) & \textbf{Log prices (most common)} \\
+$1$  & Restricted linear trend & Series with drift (GDP, interest rates) \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+For stock log prices, use \texttt{det\_order = 0} (restricted constant), which is the default 
+in \texttt{johansen.py}.
+
+% =============================================================================
+\section{The Lag Relationship: $p$ vs. $k\_ar\_diff$}
+% =============================================================================
+
+The Johansen test is parameterised by $k\_ar\_diff$, the number of lagged differences in the VECM.
+The relationship to the VAR lag $p$ is:
+
+\begin{equation}
+    k\_ar\_diff = p - 1
+\end{equation}
+
+\textbf{Example:} If \texttt{VAROptimalLagSelect} returns $p^* = 3$, then $k\_ar\_diff = 2$.
+
+This is automated in \texttt{johansen.py}: when \texttt{k\_ar\_diff=None}, it calls 
+\texttt{VAROptimalLagSelect} internally.
+
+% =============================================================================
+\section{How to Interpret the Output: Worked Example}
+% =============================================================================
+
+Suppose we test 3 series (Reliance, TCS, Infosys) at 5\% significance.
+
+\medskip
+\textbf{Trace test output:}
+
+\begin{center}
+\begin{tabular}{@{}lrrrl@{}}
+\toprule
+$H_0$ & Trace Stat & CV (5\%) & Reject? \\
+\midrule
+$r \leq 0$ & 48.32 & 29.80 & Yes (accept) \\
+$r \leq 1$ & 14.11 & 15.49 & No   \\
+$r \leq 2$ &  3.20 &  3.84 & No   \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\textbf{Reading:}
+\begin{itemize}
+    \item $r = 0$: Rejected. At least 1 cointegrating vector exists.
+    \item $r = 1$: Failed to reject. At most 1 cointegrating vector.
+    \item \textbf{Conclusion: Cointegrating rank $r^* = 1$.}
+\end{itemize}
+
+The single cointegrating vector $\beta$ (extracted from the eigenvector with the largest eigenvalue) 
+gives the recipe for the stationary spread:
+\[
+S_t = \beta_1 \cdot \text{REL}_t + \beta_2 \cdot \text{TCS}_t + \beta_3 \cdot \text{INFY}_t
+\]
+
+This spread $S_t$ is $I(0)$ (stationary) and is what you monitor for mean-reversion trading.
+
+% =============================================================================
+\section{Connection to the Dark Wing Pipeline}
+% =============================================================================
+
+\begin{enumerate}[label=\textbf{Step \arabic*:}]
+    \item \textbf{Unit Root:} Confirm all series are $I(1)$ via \texttt{StationarityTest.check\_stationarity()}.
+    \item \textbf{Lag Selection:} Get $p^*$ from \texttt{VAROptimalLagSelect.select\_lag()}.
+    \item \textbf{Johansen:} Run \texttt{JohansenTest.run()}, obtain rank $r^*$ and $\beta$.
+    \item \textbf{VECM:} Fit $\texttt{fit\_vecm.py}$ using rank $r^*$, extract $\alpha$ (adjustment speeds).
+    \item \textbf{Kalman:} Use $\beta$ as the initial hedge ratio in \texttt{dynamic\_beta.py}.
+    \item \textbf{Signal:} Compute spread $S_t = \beta^\top X_t$, z-score it, generate buy/sell signal.
+\end{enumerate}
+
+\newpage
+% =============================================================================
+\section{Mathematical Derivation: Why the Eigenvalue Problem?}
+% =============================================================================
+
+This section shows, step by step, why solving $|\lambda S_{11} - S_{10} S_{00}^{-1} S_{01}| = 0$ 
+finds the cointegrating vectors. You can skip this in practice but it is good to know.
+
+\medskip
+We want to maximise the log-likelihood of the VECM subject to the rank constraint $\text{rank}(\Pi) = r$.
+
+The concentrated log-likelihood (after profiling out $\alpha$ and $\Gamma_j$) is:
+
+\begin{equation}
+    \mathcal{L}(\beta) = \text{const} - \frac{T}{2} \ln\left| S_{00} - S_{01}\beta(\beta^\top S_{11} \beta)^{-1}\beta^\top S_{10} \right|
+\end{equation}
+
+Maximising this over $\beta$ subject to the normalisation $\beta^\top S_{11} \beta = I_r$ leads to 
+the eigenvalue equation (\ref{eq:eigproblem}).
+
+The $r$ eigenvectors with the \textbf{largest} eigenvalues $\hat{\lambda}_1 \geq \cdots \geq \hat{\lambda}_r$ 
+are the Maximum Likelihood Estimator of $\beta$.
+
+Each eigenvalue $\hat{\lambda}_i$ measures the \emph{strength} of the $i$-th cointegrating 
+relationship — how tightly the corresponding linear combination is pulled back to its mean.
+
+\end{document}
