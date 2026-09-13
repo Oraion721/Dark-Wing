@@ -16,8 +16,6 @@ Architecture: State-Space-VECM
 
 ---
 
----
-
 ## Overview
 
 Dark Wing is a research framework for cointegration-based statistical arbitrage across global equity pairs. The core idea is simple: when two assets share a long-run equilibrium, short-term deviations from that equilibrium are tradeable and tend to revert. What makes this project different from a textbook implementation is the combination of three things: a **dynamic Kalman filter** that continuously updates the hedge ratio rather than fixing it at a static OLS estimate, a **5-barrier stop-loss stack** that handles time-based and volatility-based exits alongside the standard Z-score stops, and a **walk-forward out-of-sample validation** that prevents parameter overfitting across the full backtest. The framework supports daily and intraday bars across 9 country markets, and connects to Interactive Brokers for live or paper order routing.
@@ -373,12 +371,10 @@ Execution complete. Generating quantitative audit report...
 =======================================================
 ```
 
-![Kalman Dynamic beta with dynamic spread and z-score. Trading signals are generated upon spread and z-score.](DAL_UAL_3y_Dynamic_beta_dashboard.png)
-
+<img width="1536" height="762" alt="DAL_UAL_3y_Dynamic_beta_dashboard" src="https://github.com/user-attachments/assets/27f18548-df45-40c8-bc62-6f6ad949c908" />
 Kalman Dynamic beta with dynamic spread and z-score. Trading signals are generated upon spread and z-score.
 
-![Rolling Cointegration for [DAL,UAL] over 3 years, 1 day interval](DAL_UAL_3y_rolling_coint.png)
-
+<img width="1536" height="762" alt="DAL_UAL_3y_rolling_coint" src="https://github.com/user-attachments/assets/4734828d-5400-4f1d-ac14-ddaee3b6ac2c" />
 Rolling Cointegration for [DAL,UAL] over 3 years, 1 day interval
 
 ---
