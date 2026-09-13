@@ -118,6 +118,8 @@ Execution complete. Generating quantitative audit report...
 Audit trade log saved to: Trade_Implement/Executor/live_trade_log_ibkr.csv
 ```
 
+*Live execution on IBKR paper trading for pair `[DAL/UAL]` for `period='3y'` & `interval='1d'`*
+
 ```bash
 =================================================================
   Dark Wing — Quantitative Statistical Arbitrage | Pairs Trading
@@ -229,6 +231,8 @@ Audit trade log saved to: Trade_Implement/Executor/live_trade_log_ibkr.csv
 ============================================================
 ```
 
+*Out-of-Sample walkforward test of `[DAL/UAL]` pair on `train_frac=0.6` for `window=4`*
+
 | Metric | Dark Wing (DAL/UAL) | Buy & Hold Benchmark |
 | --- | --- | --- |
 | Annualized Return | 8.73% | 12.80% |
@@ -271,7 +275,7 @@ python run_paper_trade.py
 
 <img width="2002" height="1657" alt="swing_performance" src="https://github.com/user-attachments/assets/d0569c6e-0ffe-4767-99b9-fdb65c69649b" />
 
-Equity curve for [DAL/UAL], 3 years, 1 day interval, with 5-barrier stops and fractional Kelly sizing. `(DRY_RUN=True; WALK_FORWARD=False)`
+*Equity curve for [DAL/UAL], 3 years, 1 day interval, with 5-barrier stops and fractional Kelly sizing. `(DRY_RUN=True; WALK_FORWARD=False)`*
 
 ```bash
 =================================================================
@@ -372,10 +376,12 @@ Execution complete. Generating quantitative audit report...
 ```
 
 <img width="1536" height="762" alt="DAL_UAL_3y_Dynamic_beta_dashboard" src="https://github.com/user-attachments/assets/27f18548-df45-40c8-bc62-6f6ad949c908" />
-Kalman Dynamic beta with dynamic spread and z-score. Trading signals are generated upon spread and z-score.
+
+*Kalman Dynamic beta with dynamic spread and z-score. Trading signals are generated upon spread and z-score.*
 
 <img width="1536" height="762" alt="DAL_UAL_3y_rolling_coint" src="https://github.com/user-attachments/assets/4734828d-5400-4f1d-ac14-ddaee3b6ac2c" />
-Rolling Cointegration for [DAL,UAL] over 3 years, 1 day interval
+
+*Rolling Cointegration for [DAL,UAL] over 3 years, 1 day interval*
 
 ---
 
@@ -511,7 +517,7 @@ Dark Wing/
 
 ## Module Guide
 
-Full mathematical derivations and econometric assumptions are documented in the  [Theoretical Foundation & Research Notes](README%203d793de17f3d809c8843e1bbd90d6443.md)  section below and in the linked Notion knowledge base. This section gives a one-to-two sentence role description for each module.
+Full mathematical derivations and econometric assumptions are documented in the  [Theoretical Foundation & Research Notes](#theoretical-foundation--research-notes) section below and in the linked Notion knowledge base. This section gives a one-to-two sentence role description for each module.
 
 ### Stationarity Tests
 
