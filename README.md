@@ -671,7 +671,6 @@ The mathematical derivations behind every module are documented in the Dark Wing
 3. Kwiatkowski-Phillips-Schmidt-Shin (KPSS) Test: [KPSS (Kwiatkowski-Phillips-Schmidt-Shin) Test](https://app.notion.com/p/KPSS-Kwiatkowski-Phillips-Schmidt-Shin-Test-3b193de17f3d8066845af72faf972889?pvs=21) 
     
     [Full Derivation & code explanation with flowchart of ADF Test & KPSS Test ](https://drive.google.com/file/d/129z0g7kZ3E1QxswjE6d4tu8xUl-SzGQ2/view?usp=drive_link)
-    Full Derivation & code explanation with flowchart of ADF Test & KPSS Test 
     
 4. Data Transform from Non-Stationary → Stationary: [Non Stationarity → Stationarity Data](https://app.notion.com/p/Non-Stationarity-Stationarity-Data-3ac93de17f3d80718c18d8f343c4922a?pvs=21) 
 5. Auto-Regressive & Moving Average Models (AR & MA Models): [Autoregressive (AR) Model](https://app.notion.com/p/Autoregressive-AR-Model-3ac93de17f3d805cba07effb1ebceaa7?pvs=21)  & [Moving Averages (MA) Model](https://app.notion.com/p/Moving-Averages-MA-Model-3ac93de17f3d8097bf8ed7bf78aba539?pvs=21) 
