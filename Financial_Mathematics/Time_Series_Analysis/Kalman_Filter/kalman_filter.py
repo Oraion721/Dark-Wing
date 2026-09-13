@@ -1,15 +1,9 @@
 """
-Module  : Financial Mathematics / Time Series Analysis / Kalman_Filter / kalman_filter.py
-Project : Dark Wing
-
 Purpose:
-    Production-grade Kalman Filter for pairs trading with dynamic hedge ratio (β_t).
     Implements the full general-form state-space model from Notion notes:
-
     State-Space Model (General Form):
         State Equation:       S_t = T_t · S_{t-1} + R_t · η_t,   η_t ~ N(0, Q_t)
         Observation Equation: Y_t = Z_t · S_t   + ε_t,            ε_t ~ N(0, H_t)
-
     For pairs trading (univariate β):
         S_t  = β_t        (hidden state = hedge ratio)
         T_t  = 1          (random walk state transition)
@@ -38,8 +32,6 @@ Pipeline Position:
     STEP 6.1 → smoother.py (KalmanSmoother)
     STEP 6.2 → dynamic_beta.py (DynamicBeta)
     STEP 7  → Forecasting (VECMForecaster, KalmanForecaster)
-
-Dependencies: numpy, pandas, scipy, matplotlib
 """
 import sys,os,warnings
 import numpy as np
