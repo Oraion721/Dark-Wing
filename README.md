@@ -269,8 +269,7 @@ python run_paper_trade.py
 
 ## Demo & Sample Output
 
-![Equity curve for [DAL/UAL], 3 years, 1 day interval, with 5-barrier stops and fractional Kelly sizing. `(DRY_RUN=True; WALK_FORWARD=False)`](swing_performance.png)
-
+<img width="2002" height="1657" alt="swing_performance" src="https://github.com/user-attachments/assets/31fa2792-4b78-40e7-9560-c1d2dec43d6c" />
 Equity curve for [DAL/UAL], 3 years, 1 day interval, with 5-barrier stops and fractional Kelly sizing. `(DRY_RUN=True; WALK_FORWARD=False)`
 
 ```bash
@@ -664,8 +663,7 @@ The mathematical derivations behind every module are documented in the Dark Wing
 2. Augmented Dickey-Fuller (ADF) Test: [DF & ADF Stationarity Test ](https://app.notion.com/p/DF-ADF-Stationarity-Test-3af93de17f3d80c28663e9cde20883a0?pvs=21)  
 3. Kwiatkowski-Phillips-Schmidt-Shin (KPSS) Test: [KPSS (Kwiatkowski-Phillips-Schmidt-Shin) Test](https://app.notion.com/p/KPSS-Kwiatkowski-Phillips-Schmidt-Shin-Test-3b193de17f3d8066845af72faf972889?pvs=21) 
     
-    [Full Derivation & code explanation with flowchart of ADF Test & KPSS Test ](ADF_KPSS.pdf)
-    
+    [Full Derivation & code explanation with flowchart of ADF Test & KPSS Test ](https://drive.google.com/file/d/129z0g7kZ3E1QxswjE6d4tu8xUl-SzGQ2/view?usp=drive_link)
     Full Derivation & code explanation with flowchart of ADF Test & KPSS Test 
     
 4. Data Transform from Non-Stationary → Stationary: [Non Stationarity → Stationarity Data](https://app.notion.com/p/Non-Stationarity-Stationarity-Data-3ac93de17f3d80718c18d8f343c4922a?pvs=21) 
@@ -673,35 +671,35 @@ The mathematical derivations behind every module are documented in the Dark Wing
 6. Vector Auto Regressive (VAR) Model: [VAR Model](https://app.notion.com/p/VAR-Model-3ac93de17f3d80cdad67c102c032f415?pvs=21) 
 7. Vector-Error-Correction-Model (VECM): [Vector Error Correction Model](https://app.notion.com/p/Vector-Error-Correction-Model-3d293de17f3d802e8123eee456011c9c?pvs=21) 
     
-    [VECMForecast.pdf](VECMForecast.pdf)
+    [VECMForecast.pdf](https://drive.google.com/file/d/1Ea89Fc6xGvAVJ7qNKyuG1PyBu2VnyaHd/view?usp=drive_link)
     
 8. Engle-Granger Cointegration Test & Johansen Cointegration Test: 
     
-    [Engle_Granger_Test.pdf](Engle_Granger_Test.pdf)
+    [Engle_Granger_Test.pdf](https://drive.google.com/file/d/1kVsP-eHLizPSG4rYB0acKOgOUj4L7P8s/view?usp=drive_link)
     
-    [Johansen_Test.pdf](Johansen_Test.pdf)
+    [Johansen_Test.pdf](https://drive.google.com/file/d/1rNuQ0JP2_ch_QvICkVQg_XpXg89Q2ZiG/view?usp=drive_link)
     
 9. Rolling Cointegration: 
     
-    [Rolling_Coint.pdf](Rolling_Coint.pdf)
+    [Rolling_Coint.pdf](https://drive.google.com/file/d/193oynU2JJNmRHcgYybC4L9rXMReGJy6E/view?usp=drive_link)
     
 10. State-Space Model & Kalman Filter: [State-Space Model](https://app.notion.com/p/State-Space-Model-3a593de17f3d80d2b65cc6c50dc124ab?pvs=21)  &  [Kalman Filter](https://app.notion.com/p/Kalman-Filter-3a493de17f3d80e1a7a5d97a9c70d57a?pvs=21) 
     
-    [DynamicBeta.pdf](DynamicBeta.pdf)
+    [DynamicBeta.pdf](https://drive.google.com/file/d/1dFXjQQqYuVNwslpXJl4YXo260sPu_j65/view?usp=drive_link)
     
-    [KalmanFilter.pdf](KalmanFilter.pdf)
+    [KalmanFilter.pdf](https://drive.google.com/file/d/1CoyOoza3cMPzihCnADfHPR7Eu4je3rL8/view?usp=drive_link)
     
-    [KalmanForecast.pdf](KalmanForecast.pdf)
+    [KalmanForecast.pdf](https://drive.google.com/file/d/1ug1mmKi91bYUUTZ63GhKStCdQVRR2sir/view?usp=drive_link)
     
-    [Smoother.pdf](Smoother.pdf)
+    [Smoother.pdf](https://drive.google.com/file/d/1vn3BWsic3AsxG2saMFGI_HExzqjmqE88/view?usp=drive_link)
     
 11. Half-Life, Spread & Z-Score: 
     
-    [Half_Life.pdf](Half_Life.pdf)
+    [Half_Life.pdf](https://drive.google.com/file/d/1YkrqfDJj5EgQRS0isEHR4sw1uFs9nD7M/view?usp=drive_link)
     
-    [Spread_Builder.pdf](Spread_Builder.pdf)
+    [Spread_Builder.pdf](https://drive.google.com/file/d/1v5RKEwHzUiwrRGd1WKL7h6b_PkB0Qa9i/view?usp=drive_link)
     
-    [ZScore.pdf](ZScore.pdf)
+    [ZScore.pdf](https://drive.google.com/file/d/1vDT1i1t2SdO5Fa0xJYNYuONnjS2OQ3kJ/view?usp=drive_link)
     
 
 ---
@@ -712,7 +710,7 @@ The mathematical derivations behind every module are documented in the Dark Wing
 
 Quantitative Trading & Financial Engineering
 
-- LinkedIn: [paste LinkedIn URL here]
+- LinkedIn: [www.linkedin.com/in/sumit-saroj-b127d16](www.linkedin.com/in/sumit-saroj-b127d16)
 
 - GitHub: [https://github.com/Oraion721](https://github.com/Oraion721)
 
