@@ -269,7 +269,8 @@ python run_paper_trade.py
 
 ## Demo & Sample Output
 
-<img width="2002" height="1657" alt="swing_performance" src="https://github.com/user-attachments/assets/31fa2792-4b78-40e7-9560-c1d2dec43d6c" />
+<img width="2002" height="1657" alt="swing_performance" src="https://github.com/user-attachments/assets/d0569c6e-0ffe-4767-99b9-fdb65c69649b" />
+
 Equity curve for [DAL/UAL], 3 years, 1 day interval, with 5-barrier stops and fractional Kelly sizing. `(DRY_RUN=True; WALK_FORWARD=False)`
 
 ```bash
