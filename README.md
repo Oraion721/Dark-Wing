@@ -4,15 +4,12 @@
 
 ![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue.svg)
 
-Python 3.10+
 
 ![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
 
-License: MIT
 
 ![Architecture: State-Space-VECM](https://img.shields.io/badge/architecture-State--Space--VECM-purple.svg)
 
-Architecture: State-Space-VECM
 
 ---
 
@@ -375,6 +372,8 @@ Execution complete. Generating quantitative audit report...
 =======================================================
 ```
 
+*Historical Simulation of `[DAL/UAL]` pair on `period='3y'`, 1 day interval.*
+
 <img width="1536" height="762" alt="DAL_UAL_3y_Dynamic_beta_dashboard" src="https://github.com/user-attachments/assets/27f18548-df45-40c8-bc62-6f6ad949c908" />
 
 *Kalman Dynamic beta with dynamic spread and z-score. Trading signals are generated upon spread and z-score.*
@@ -523,7 +522,7 @@ Full mathematical derivations and econometric assumptions are documented in the 
 
 - **`TS_stationarity_test.py`** (`StationarityTest`): Runs ADF and KPSS in combination; the pair of tests cross-validates stationarity and avoids the false positive rates that plague either test alone. Returns a single `is_stationary` Boolean alongside both test dictionaries.
 
-### VAR Lag Selection
+### Vector Auto Regressive Lag Selection
 
 - **`VAR_Lag_Select.py`** (`VAROptimalLagSelect`): Wraps `statsmodels VAR.select_order()` to determine the correct lag count before cointegration testing. Evaluates AIC, BIC, HQIC, and FPE simultaneously and plots all four criteria.
 
@@ -533,7 +532,7 @@ Full mathematical derivations and econometric assumptions are documented in the 
 - **`johansen.py`** (`JohansenTest`): Maximum likelihood test supporting two or more assets simultaneously; extracts the full matrix of cointegrating vectors. Necessary when trading baskets or when Engle-Granger gives inconclusive results.
 - **`rolling_cointegration.py`** (`RollingCointegration`): Runs either test on sliding windows and outputs a Cointegration Stability Score — the fraction of windows where cointegration holds. Used to screen out pairs that fail structurally.
 
-### VECM
+### Vecotr Error Correction Model
 
 - **`fit_vecm.py`** (`VECMModel`): Fits a Vector Error Correction Model using `statsmodels VECM`; extracts the Error Correction Term (ECT) as the spread series for mean-reversion trading.
 - **`diagnostics.py`** (`VECMDiagnostics`): Post-estimation validation — autocorrelation (Portmanteau), heteroskedasticity (ARCH-LM), normality (Doornik-Hansen), ECT stationarity, and structural stability (Chow). Outputs a VECM Health Score (0–100).
@@ -571,7 +570,7 @@ Full mathematical derivations and econometric assumptions are documented in the 
 ### Execution
 
 - **`ibkr_executor.py`** (`IBKRExecutor`): Execution client for Interactive Brokers TWS/Gateway — bracket order placement, paper trading emulation, order status tracking, and CSV audit logging.
-- **`IBKR_Connection.py`**, **`IBKR_MarketData.py`**: Low-level TWS socket management, real-time tick subscriptions, and historical bar requests.
+- **`IBKR_Connection.py`**, **`IBKR_MarketData.py`**: Low-level TWS/Gateway socket management, real-time tick subscriptions, and historical bar requests.
 
 ---
 
@@ -586,7 +585,7 @@ Full mathematical derivations and econometric assumptions are documented in the 
 - **Z-score thresholds**: `Entry = ±1.50σ, Exit = ±0.40σ, Structural Stop = ±3.00σ`
 - **Stop barriers**: Z-score hard stop`(±3.0σ)` + Dollar drawdown cap (3% of total capital) + Spread volatility expansion `(2.5σ)` + Ornstein-Uhlenbeck time decay stop `(3 × Half-Life)` + 5-bar post-stop cooldown
 
-Full results table: see [**At-a-Glance Results**](#at-a-glance-results) result
+Full results table: see [**At a Glance Results**](#at-a-glance-results) 
 
 ---
 
@@ -664,13 +663,13 @@ pytest tests/test_core.py -v
 
 ## Theoretical Foundation & Research Notes
 
-The mathematical derivations behind every module are documented in the Dark Wing research knowledge base on Notion:
+The mathematical derivations behind every module are documented in the Dark Wing research knowledge base in Notion and PDFs (make sure you have valid Notion account for seamless experience):
 
 1. Stationarity & It’s Types: [Stationarity of Time Series](https://app.notion.com/p/Stationarity-of-Time-Series-3a893de17f3d800e9c63eaa01bdf2abb?pvs=21) 
 2. Augmented Dickey-Fuller (ADF) Test: [DF & ADF Stationarity Test ](https://app.notion.com/p/DF-ADF-Stationarity-Test-3af93de17f3d80c28663e9cde20883a0?pvs=21)  
 3. Kwiatkowski-Phillips-Schmidt-Shin (KPSS) Test: [KPSS (Kwiatkowski-Phillips-Schmidt-Shin) Test](https://app.notion.com/p/KPSS-Kwiatkowski-Phillips-Schmidt-Shin-Test-3b193de17f3d8066845af72faf972889?pvs=21) 
     
-    [Full Derivation & code explanation with flowchart of ADF Test & KPSS Test ](https://drive.google.com/file/d/129z0g7kZ3E1QxswjE6d4tu8xUl-SzGQ2/view?usp=drive_link)
+    [ADF_KPSS_Test.pdf](https://drive.google.com/file/d/129z0g7kZ3E1QxswjE6d4tu8xUl-SzGQ2/view?usp=drive_link)
     
 4. Data Transform from Non-Stationary → Stationary: [Non Stationarity → Stationarity Data](https://app.notion.com/p/Non-Stationarity-Stationarity-Data-3ac93de17f3d80718c18d8f343c4922a?pvs=21) 
 5. Auto-Regressive & Moving Average Models (AR & MA Models): [Autoregressive (AR) Model](https://app.notion.com/p/Autoregressive-AR-Model-3ac93de17f3d805cba07effb1ebceaa7?pvs=21)  & [Moving Averages (MA) Model](https://app.notion.com/p/Moving-Averages-MA-Model-3ac93de17f3d8097bf8ed7bf78aba539?pvs=21) 
@@ -716,7 +715,7 @@ The mathematical derivations behind every module are documented in the Dark Wing
 
 Quantitative Trading & Financial Engineering
 
-- LinkedIn: [www.linkedin.com/in/sumit-saroj-b127d16](www.linkedin.com/in/sumit-saroj-b127d16)
+- LinkedIn: [www.linkedin.com/in/sumitsarojb127d16](www.linkedin.com/in/sumitsarojb127d16)
 
 - GitHub: [https://github.com/Oraion721](https://github.com/Oraion721)
 
